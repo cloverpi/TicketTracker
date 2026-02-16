@@ -187,10 +187,25 @@ async function insertMoreTickets() {
   }
 }
 
+async function findByPhone(phone: string) {
+  if (!/\d/.test(phone)) return [];
+  const digits = phone.replace(/\D/g, "");
 
+  const phoneQuery = `%${digits.slice(0, 3)}%${digits.slice(3, 6)}%${digits.slice(6)}%`;
+
+  const rows = await sendQuery(`
+    SELECT *
+    FROM cust
+    WHERE Phone LIKE '${phoneQuery}'
+    LIMIT 5
+  `);
+
+  console.log([...rows]);
+}
 
 
 connect();
 // insertMoreTickets();
 // run();
-justTickets();
+// justTickets();
+findByPhone('306.7');
