@@ -77,6 +77,7 @@ let conn: Connection | undefined = undefined;
 
 async function connect() {
   conn = await odbc.connect("DSN=ChaseTrack");
+
 }
 
 async function sendQuery(q: string) {
