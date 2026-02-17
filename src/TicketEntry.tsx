@@ -103,7 +103,7 @@ function TicketEntry() {
         <label htmlFor="issue">Issue</label>
     </div>
     <div className="form-floating mb-2">
-        <textarea className="form-control" id="solution" placeholder="" style={{height: "150px", resize: "none"}}/>
+        <textarea className="form-control" id="solution" placeholder="" style={{height: "110px", resize: "none"}}/>
         <label htmlFor="solution">Solution</label>
     </div>
     <div className="row">
