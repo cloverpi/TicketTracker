@@ -29,7 +29,7 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.VITE_PUBLIC, 'lifering.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -86,106 +86,106 @@ async function sendQuery(q: string) {
 
 }
 
-async function run() {
-  try {
+// async function run() {
+//   try {
     
-    const rows = await sendQuery(`
-      SELECT
-        s.ticket,
-        s.company,
-        s.issue,
-        s.solution,
-        c.Phone,
-        c.contact
-      FROM ServTrack s
-      LEFT JOIN cust c
-        ON s.company = c.companyName
-    `);
+//     const rows = await sendQuery(`
+//       SELECT
+//         s.ticket,
+//         s.company,
+//         s.issue,
+//         s.solution,
+//         c.Phone,
+//         c.contact
+//       FROM ServTrack s
+//       LEFT JOIN cust c
+//         ON s.company = c.companyName
+//     `);
 
-    // console.log(rows);
-  } catch (e) {
-    console.log(e);
-  }
-}
+//     // console.log(rows);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
-async function justTickets() {
-  try {
+// async function justTickets() {
+//   try {
     
-    const rows = await sendQuery(`
-      SELECT
-        s.ticket,
-        s.company,
-        s.issue,
-        s.solution
-      FROM ServTrack s
-      LEFT JOIN cust c
-        ON s.company = c.companyName
-      ORDER BY s.ticket DESC
-      LIMIT 5
-      OFFSET 5;
-    `);
+//     const rows = await sendQuery(`
+//       SELECT
+//         s.ticket,
+//         s.company,
+//         s.issue,
+//         s.solution
+//       FROM ServTrack s
+//       LEFT JOIN cust c
+//         ON s.company = c.companyName
+//       ORDER BY s.ticket DESC
+//       LIMIT 5
+//       OFFSET 5;
+//     `);
 
-    console.log([...rows]);
-  } catch (e) {
-    console.log(e);
-  }
-}
+//     console.log([...rows]);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
-async function insertMoreTickets() {
-  const companies = ["Acme Corp", "Globex", "Initech"];
-  const issues = [
-    "Cannot print",
-    "PC won't boot",
-    "Email not sending",
-    "VPN not connecting",
-    "Internet slow",
-    "Keyboard not working",
-    "Monitor flickering",
-    "Software crash",
-    "File server unreachable",
-    "Password expired"
-  ];
+// async function insertMoreTickets() {
+//   const companies = ["Acme Corp", "Globex", "Initech"];
+//   const issues = [
+//     "Cannot print",
+//     "PC won't boot",
+//     "Email not sending",
+//     "VPN not connecting",
+//     "Internet slow",
+//     "Keyboard not working",
+//     "Monitor flickering",
+//     "Software crash",
+//     "File server unreachable",
+//     "Password expired"
+//   ];
 
-  const solutions = [
-    "Reinstalled printer driver and cleared queue",
-    "Replaced faulty power supply",
-    "Reconfigured SMTP settings",
-    "Reset VPN profile and credentials",
-    "Restarted router and cleared DNS cache",
-    "Replaced keyboard",
-    "Adjusted refresh rate and reseated cable",
-    "Updated application to latest version",
-    "Restarted file server service",
-    "Reset user password"
-  ];
+//   const solutions = [
+//     "Reinstalled printer driver and cleared queue",
+//     "Replaced faulty power supply",
+//     "Reconfigured SMTP settings",
+//     "Reset VPN profile and credentials",
+//     "Restarted router and cleared DNS cache",
+//     "Replaced keyboard",
+//     "Adjusted refresh rate and reseated cable",
+//     "Updated application to latest version",
+//     "Restarted file server service",
+//     "Reset user password"
+//   ];
 
-  let ticketNumber = 5;
+//   let ticketNumber = 5;
 
-  for (let i = 0; i < 24; i++) {
-    const company = companies[i % companies.length];
-    const issue = issues[i % issues.length];
-    const solution = solutions[i % solutions.length];
+//   for (let i = 0; i < 24; i++) {
+//     const company = companies[i % companies.length];
+//     const issue = issues[i % issues.length];
+//     const solution = solutions[i % solutions.length];
 
-    const ticket = ticketNumber.toString().padStart(3, "0").padStart(7, " ");
-    ticketNumber++;
+//     const ticket = ticketNumber.toString().padStart(3, "0").padStart(7, " ");
+//     ticketNumber++;
 
-    const sql = `
-      INSERT INTO ServTrack (ticket, company, issue, solution)
-      VALUES (
-        '${ticket}',
-        '${company}',
-        '${issue}',
-        '${solution}'
-      )
-    `;
-    try {
-      const result = await sendQuery(sql);
-      console.log(result);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-}
+//     const sql = `
+//       INSERT INTO ServTrack (ticket, company, issue, solution)
+//       VALUES (
+//         '${ticket}',
+//         '${company}',
+//         '${issue}',
+//         '${solution}'
+//       )
+//     `;
+//     try {
+//       const result = await sendQuery(sql);
+//       console.log(result);
+//     } catch (e) {
+//       console.log(e);
+//     }
+//   }
+// }
 
 async function findByPhone(phone: string) {
   if (!/\d/.test(phone)) return [];
