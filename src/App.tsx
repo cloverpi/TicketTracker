@@ -1,23 +1,23 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/electron-vite.animate.svg'
-// import './App.css'
-import TicketAccourdian from './TicketAccourdian'
-import SearchBar from './SearchBar'
-import OpenTickets from './OpenTickets'
-
-
+import TicketAccourdian from "./TicketAccourdian";
+import SearchBar from "./SearchBar";
+import OpenTickets from "./OpenTickets";
+import TicketEntry from "./TicketEntry";
+import Company from "./Company";
+import TicketSelection from "./TicketSelection";
 
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
     <div className="container-fluid py-2" style={{ width: "99%" }}>
-      <OpenTickets />
-      <SearchBar />
+      <TicketSelection />
+      {/* <OpenTickets /> */}
+      {/* <SearchBar /> */}
+      <Company />
       <TicketAccourdian />
+      <TicketEntry />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
