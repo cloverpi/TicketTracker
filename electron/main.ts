@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { connect, connectionProperties, findByPhone, getOpenTickets, testConnection } from './lib/db'
+import { connect, connectionProperties, findByPhone, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
 import { getSettings, setSettings } from './lib/settings'
 
 
@@ -105,7 +105,10 @@ ipcMain.handle("updateSettings", async (_event, opts) => {
 
 ipcMain.handle("findByPhone", async (_event, opts) => {
   return await findByPhone(opts.phone);
+});
 
+ipcMain.handle("findLastTicketsByCompany", async (_event, opts) => {
+  return await findLastTicketsByCompany(opts.company);
 });
 
 ipcMain.handle("getOpenTickets", async () => {

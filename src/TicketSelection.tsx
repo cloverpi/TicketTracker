@@ -2,7 +2,11 @@ import { useState } from 'react'
 import SearchBar from './SearchBar'
 import OpenTickets from './OpenTickets'
 
-function TicketSelection() {
+interface Prop {
+    onSelect: (v: any) => void
+}
+
+function TicketSelection( {onSelect} : Prop ) {
     const [activeTab, setActiveTab] = useState('new');
 
     const tabs = [
@@ -11,7 +15,7 @@ function TicketSelection() {
     ];
 
     const tabContent: Record<string, JSX.Element> = {
-        new: <SearchBar />,
+        new: <SearchBar onSelect={onSelect}/>,
         open: <OpenTickets />
     }
 

@@ -7,12 +7,17 @@ import Setup from "./Setup";
 
 function App() {
   const [firstRun, setFirstRun] = useState(true);
+  const [selectedTicket, setSelectedTicket] = useState <any|undefined> (undefined);
+
+  const selectSearch = (v: any) => {
+    // console.log(v);
+    setSelectedTicket(v);
+  }
   
   useEffect( () => {
     const getFirstRun = async () => {
       const res = await window.app.firstRun();
       setFirstRun(res);
-      console.log(res);
     }
     getFirstRun();
   }, []);
@@ -22,11 +27,9 @@ function App() {
   </>
 
   const mainView = <>
-    <TicketSelection />
-    {/* <OpenTickets /> */}
-    {/* <SearchBar /> */}
-    <Company />
-    <TicketAccourdian />
+    <TicketSelection onSelect={selectSearch} />
+    <Company company={selectedTicket?.company || ''}/>
+    <TicketAccourdian company={selectedTicket?.company || ''}/>
     <TicketEntry />
   </>
 

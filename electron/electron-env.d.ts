@@ -26,7 +26,8 @@ interface Window {
   ipcRenderer: import('electron').IpcRenderer,
   api: {
     findByPhone: (opts: { phone: string }) => Promise<[]>,
-    getOpenTickets: () => Promise<[]>
+    getOpenTickets: () => Promise<[]>,
+    findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>
   },
   app: {
     firstRun: () => Promise<boolean>,

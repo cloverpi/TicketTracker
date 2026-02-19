@@ -1,12 +1,14 @@
 
-
-function Company() {
+interface Props {
+  company: string
+}
+function Company({company}: Props) {
 
 
   return (
     <>
       <h2>
-        Test Company
+        {company}
       </h2>
 
     </>

@@ -32,6 +32,9 @@ contextBridge.exposeInMainWorld('api', {
   getOpenTickets: () => {
     return ipcRenderer.invoke("getOpenTickets");
   },
+  findLastTicketsByCompany: (opts: { company: string }) => {
+    return ipcRenderer.invoke("findLastTicketsByCompany", opts);
+  },
 
 });
 

@@ -19,6 +19,18 @@ export async function connect() {
   }
 }
 
+export async function testConnection(user: string, pass: string) {
+  if (!user || !pass) return false;
+  connectionSettings.user = user;
+  connectionSettings.pass = pass;
+  await connect();
+  const res = await sendQuery(`
+    SELECT *
+    FROM System
+    `);
+  return res.length > 0;
+}
+
 async function sendQuery(q: string) {
   try {
     if (!!conn) {
@@ -59,16 +71,15 @@ export async function findByPhone(phone: string) {
   return [...result];
 }
 
-export async function testConnection(user: string, pass: string) {
-  if (!user || !pass) return false;
-  connectionSettings.user = user;
-  connectionSettings.pass = pass;
-  await connect();
-  const res = await sendQuery(`
+export async function findLastTicketsByCompany(company: string) {
+  const result = await sendQuery(`
     SELECT *
-    FROM System
-    `);
-  return res.length > 0;
+    FROM servtrack
+    WHERE company = "${company}"
+    ORDER BY serviceid DESC
+    LIMIT 3
+  `);
+  return [...result];
 }
 
 // async function run() {
