@@ -1,4 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import { getOpenTickets } from './lib/db'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -22,3 +23,14 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+contextBridge.exposeInMainWorld('api', {
+  //db
+  findByPhone: (opts: { phone: string}) => {
+    return ipcRenderer.invoke("findByPhone", opts);
+  },
+  getOpenTickets: () => {
+    return ipcRenderer.invoke("getOpenTickets");
+  },
+
+});

@@ -14,7 +14,7 @@ export default defineConfig({
         vite: {
           build: {
             rollupOptions: {
-              external: ['odbc'],
+              external: ['odbc', 'winreg'],
             },
           },
         },

@@ -1,7 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function OpenTickets() {
-  const [count, setCount] = useState(0);
+  const [openTickets, setOpenTickets] = useState([]);
+
+  useEffect(() => {
+    const getTickets = async () => {
+      const res = await window.api.getOpenTickets();
+      setOpenTickets(res);
+      console.log(res);
+    }
+    getTickets();
+  }, []); 
 
   return (
     <>
@@ -25,7 +34,16 @@ function OpenTickets() {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            {
+              openTickets.map((t) => (
+                <tr key={t.serviceid}>
+                  <td>{t.daterec}</td>
+                  <td className="text-truncate">{t.company}</td>
+                  <td className="text-truncate">{t.problem}</td>
+                </tr>
+              ))
+            }
+            {/* <tr>
               <td>2026-02-17</td>
               <td className="text-truncate">
                 Otto and the guy who knew how and what to eat at all times
@@ -53,7 +71,7 @@ function OpenTickets() {
               <td>2026-02-17</td>
               <td>Doe</td>
               <td>@social</td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>
