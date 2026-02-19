@@ -10,8 +10,8 @@ export interface RegistrySettings {
 }
 
 const programKey = new WinReg({
-  hive: WinReg.HKCU,
-  key: `\\Software\\${appName}`
+    hive: WinReg.HKCU,
+    key: `\\Software\\${appName}`
 });
 
 function XORStrings(buf: Buffer) {
@@ -31,16 +31,16 @@ function encodeString(str: string) {
     return XORStrings(Buffer.from(str, 'utf-8'));
 }
 
-export function saveSettings () {
-    programKey.set('pass', WinReg.REG_SZ, encodeString('somepass'), (err)=>{
-        if (err) {
-            console.log('some error occurred');
-            console.log(err);
-            return;
-        }
-        console.log('set');
-    })
-}
+// export function saveSettings() {
+//     programKey.set('pass', WinReg.REG_SZ, encodeString('somepass'), (err) => {
+//         if (err) {
+//             console.log('some error occurred');
+//             console.log(err);
+//             return;
+//         }
+//         console.log('set');
+//     })
+// }
 
 export async function getSettings() {
     const settings: RegistrySettings = await new Promise((resolve, reject) => {
@@ -55,7 +55,24 @@ export async function getSettings() {
         });
     });
 
+    if (!settings.pass) return;
+
     settings.pass = decodeString(settings.pass);
 
     return settings;
+}
+
+export async function setSettings(user: string, pass: string) {
+    programKey.set('user', WinReg.REG_SZ, user, (err) => {
+        if (err) {
+            console.log('Error creating user');
+            console.log(err)
+        }
+    });
+    programKey.set('pass', WinReg.REG_SZ, encodeString(pass), (err) => {
+        if (err) {
+            console.log('Error creating pass');
+            console.log(err)
+        };
+    });
 }

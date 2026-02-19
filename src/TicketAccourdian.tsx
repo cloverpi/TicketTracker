@@ -1,87 +1,48 @@
 import { useState } from "react";
 
-// import './App.css'
-
 function TicketAccourdian() {
-  const [count, setCount] = useState(0);
+  const [ activeCord, setActiveCord ] = useState(2);
+
+  const tickets = [
+    {serviceid: '   543', problem: `Potatoes aren't cooking`, solution: `Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the first item’s accordion body.`},
+    {serviceid: '   542', problem: `Fries won't finish`, solution: `Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the second item’s accordion body. Let’s imagine this being filled with some actual content.`},
+    {serviceid: '   541', problem: `Fries won't: Ding fries are done.`, solution: `Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application of how this would look in a real-world application.of how this would look in a real-world application.of how this would look in a real-world.`}
+  ];
+
+  const handleAccordianClick = (cord: number) => {
+    if (activeCord == cord) {
+      setActiveCord(-1);
+    } else {
+      setActiveCord(cord);
+    }
+  }
 
   return (
     <>
-      <div className="accordion accordion-flush" id="accordionFlushExample">
-        <div className="accordion-item">
-          <h2 className="accordion-header">
+      <div className="accordion accordion-flush mb-2" id="ticketAccordian">
+        {tickets.map( (t, i) => (
+          <div key={t.serviceid} className="accordion-item">
+            <h2 className="accordion-header">
             <button
+              id={`${i}`}
               className="accordion-button collapsed"
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseOne"
-              aria-expanded="false"
-              aria-controls="flush-collapseOne"
+              onClick={() => handleAccordianClick(i)}
             >
-              #543: Potatoes aren't cooking
+              #{t.serviceid.trim()}: {t.problem}
             </button>
           </h2>
           <div
-            id="flush-collapseOne"
-            className="accordion-collapse collapse"
-            data-bs-parent="#accordionFlushExample"
+            id={`flush-collapse${i}`}
+            className={`accordion-collapse collapse ${i == activeCord ? 'show' : '' }`}
+            data-bs-parent="#ticketAccordian"
           >
             <div className="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the <code>.accordion-flush</code> className. This is
-              the first item’s accordion body.
+              {t.solution}
             </div>
           </div>
         </div>
-        <div className="accordion-item">
-          <h2 className="accordion-header">
-            <button
-              className="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseTwo"
-              aria-expanded="false"
-              aria-controls="flush-collapseTwo"
-            >
-              #542: Fries won't finish
-            </button>
-          </h2>
-          <div
-            id="flush-collapseTwo"
-            className="accordion-collapse collapse "
-            data-bs-parent="#accordionFlushExample"
-          >
-            <div className="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the <code>.accordion-flush</code> className. This is
-              the second item’s accordion body. Let’s imagine this being filled
-              with some actual content.
-            </div>
-          </div>
-        </div>
-        <div className="accordion-item">
-          <h2 className="accordion-header">
-            <button
-              className="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseThree"
-              aria-expanded="false"
-              aria-controls="flush-collapseThree"
-            >
-              #541: Fries won't: Ding fries are done.
-            </button>
-          </h2>
-          <div
-            id="flush-collapseThree"
-            className="accordion-collapse collapse show"
-            data-bs-parent="#accordionFlushExample"
-          >
-            <div className="accordion-body">
-              Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application of how this would look in a real-world application.of how this would look in a real-world application.of how this would look in a real-world.
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
     </>
   );

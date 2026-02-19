@@ -26,11 +26,22 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
 contextBridge.exposeInMainWorld('api', {
   //db
-  findByPhone: (opts: { phone: string}) => {
+  findByPhone: (opts: { phone: string }) => {
     return ipcRenderer.invoke("findByPhone", opts);
   },
   getOpenTickets: () => {
     return ipcRenderer.invoke("getOpenTickets");
+  },
+
+});
+
+contextBridge.exposeInMainWorld('app', {
+  //
+  firstRun: () => {
+    return ipcRenderer.invoke("firstRun");
+  },
+  updateSettings: (opts: { user: string, pass: string }) => {
+    return ipcRenderer.invoke("updateSettings", opts);
   },
 
 });

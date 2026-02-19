@@ -7,7 +7,6 @@ function OpenTickets() {
     const getTickets = async () => {
       const res = await window.api.getOpenTickets();
       setOpenTickets(res);
-      console.log(res);
     }
     getTickets();
   }, []); 
@@ -43,35 +42,6 @@ function OpenTickets() {
                 </tr>
               ))
             }
-            {/* <tr>
-              <td>2026-02-17</td>
-              <td className="text-truncate">
-                Otto and the guy who knew how and what to eat at all times
-                because he likes food and going to the store and whatever else
-                it is that Mark likes
-              </td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <td>2026-02-17</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <td>2026-02-17</td>
-              <td>Doe</td>
-              <td>@social</td>
-            </tr>
-            <tr>
-              <td>2026-02-17</td>
-              <td>Doe</td>
-              <td>@social</td>
-            </tr>
-            <tr>
-              <td>2026-02-17</td>
-              <td>Doe</td>
-              <td>@social</td>
-            </tr> */}
           </tbody>
         </table>
       </div>

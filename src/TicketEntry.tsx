@@ -136,10 +136,6 @@ function TicketEntry() {
       <div className="col-4  mb-2 d-flex flex-column justify-content-end">
         <button type="button" className="btn btn-primary" style={{width: '100%', height: '50%'}}>Submit</button>
       </div>
-    
-      {/* <div className="col-4">
-
-      </div> */}
 
     </div>
   </>

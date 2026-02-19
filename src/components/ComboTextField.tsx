@@ -23,8 +23,6 @@ function ComboTextField({
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
-//   const filtered = options
-
 useEffect(() => {
   if (!open) return;
 

@@ -23,9 +23,13 @@ declare namespace NodeJS {
 
 // Used in Renderer process, expose in `preload.ts`
 interface Window {
-  ipcRenderer: import('electron').IpcRenderer
+  ipcRenderer: import('electron').IpcRenderer,
   api: {
-    findByPhone: (opts: { phone: string }) => Promise<[]>
+    findByPhone: (opts: { phone: string }) => Promise<[]>,
     getOpenTickets: () => Promise<[]>
+  },
+  app: {
+    firstRun: () => Promise<boolean>,
+    updateSettings: (opts: { user: string, pass: string }) => Promise<boolean>
   }
 }

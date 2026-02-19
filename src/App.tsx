@@ -1,21 +1,38 @@
 import TicketAccourdian from "./TicketAccourdian";
-import SearchBar from "./SearchBar";
-import OpenTickets from "./OpenTickets";
 import TicketEntry from "./TicketEntry";
 import Company from "./Company";
 import TicketSelection from "./TicketSelection";
+import { useEffect, useState } from "react";
+import Setup from "./Setup";
 
 function App() {
-  // const [count, setCount] = useState(0)
+  const [firstRun, setFirstRun] = useState(true);
+  
+  useEffect( () => {
+    const getFirstRun = async () => {
+      const res = await window.app.firstRun();
+      setFirstRun(res);
+      console.log(res);
+    }
+    getFirstRun();
+  }, []);
+
+  const firstLoadView = <>
+    <Setup onComplete={() => setFirstRun(false)}/>
+  </>
+
+  const mainView = <>
+    <TicketSelection />
+    {/* <OpenTickets /> */}
+    {/* <SearchBar /> */}
+    <Company />
+    <TicketAccourdian />
+    <TicketEntry />
+  </>
 
   return (
     <div className="container-fluid py-2" style={{ width: "99%" }}>
-      <TicketSelection />
-      {/* <OpenTickets /> */}
-      {/* <SearchBar /> */}
-      <Company />
-      <TicketAccourdian />
-      <TicketEntry />
+        {firstRun ? firstLoadView : mainView}
     </div>
   );
 }

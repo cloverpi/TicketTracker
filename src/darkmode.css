@@ -1,5 +1,6 @@
 :root {
   font-size: 75%;
+  /* height: 100%; */
   color-scheme: dark;
   --bs-body-color: #eceeef;
   --bs-body-color-rgb: 236, 238, 239;

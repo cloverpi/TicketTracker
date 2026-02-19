@@ -1,9 +1,8 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
-// import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { connect, connectionProperties, findByPhone, getOpenTickets } from './lib/db'
-import { getSettings, RegistrySettings } from './lib/settings'
+import { connect, connectionProperties, findByPhone, getOpenTickets, testConnection } from './lib/db'
+import { getSettings, setSettings } from './lib/settings'
 
 
 
@@ -29,13 +28,21 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
+let firstRun: boolean = false;
 
 async function createWindow() {
-  const settings = await getSettings();
-  connectionProperties(settings);
-  await connect();
-  await getOpenTickets();
-  
+  try {
+    const settings = await getSettings();
+    if (settings) {
+      connectionProperties(settings);
+      await connect();
+    } else {
+      firstRun = true;
+    }
+  } catch (e) {
+    firstRun = true;
+    console.log(e);
+  }
 
   Menu.setApplicationMenu(null);
   win = new BrowserWindow({
@@ -83,11 +90,25 @@ app.on('activate', () => {
 
 app.whenReady().then(createWindow);
 
-ipcMain.handle("findByPhone", async (_event, opts) => {
-  return await findByPhone(opts.phone);
+ipcMain.handle("firstRun", () => {
+  return firstRun;
 });
 
-ipcMain.handle("getOpenTickets", async (_event) => {
+ipcMain.handle("updateSettings", async (_event, opts) => {
+  const { user, pass } = opts;
+  const connectionStatus = await testConnection(user, pass);
+  if (!connectionStatus) return false;
+  setSettings(user, pass);
+  firstRun = false;
+  return true;
+});
+
+ipcMain.handle("findByPhone", async (_event, opts) => {
+  return await findByPhone(opts.phone);
+
+});
+
+ipcMain.handle("getOpenTickets", async () => {
   return await getOpenTickets();
 });
 

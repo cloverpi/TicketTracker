@@ -15,7 +15,7 @@ export function connectionProperties(settings: RegistrySettings) {
 export async function connect() {
   if (!conn) {
     console.log('Connecting to DB.')
-    conn = await odbc.connect("DSN=ChaseTrack");
+    conn = await odbc.connect(`DSN=ChaseTrack;UID=${connectionSettings.user};PWD=${connectionSettings.pass}`);
   }
 }
 
@@ -55,8 +55,20 @@ export async function findByPhone(phone: string) {
     WHERE Phone LIKE '${phoneQuery}'
     LIMIT 5
   `);
-  
+
   return [...result];
+}
+
+export async function testConnection(user: string, pass: string) {
+  if (!user || !pass) return false;
+  connectionSettings.user = user;
+  connectionSettings.pass = pass;
+  await connect();
+  const res = await sendQuery(`
+    SELECT *
+    FROM System
+    `);
+  return res.length > 0;
 }
 
 // async function run() {

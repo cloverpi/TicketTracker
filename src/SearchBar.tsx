@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 function SearchBar() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
