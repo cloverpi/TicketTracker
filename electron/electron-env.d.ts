@@ -26,6 +26,8 @@ interface Window {
   ipcRenderer: import('electron').IpcRenderer,
   api: {
     findByPhone: (opts: { phone: string }) => Promise<[]>,
+    findByCompanyName: (opts: { company: string }) => Promise<[]>,
+    findCompany: (opts: { query: string }) => Promise<[]>,
     getOpenTickets: () => Promise<[]>,
     findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>
   },

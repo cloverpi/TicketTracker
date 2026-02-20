@@ -54,4 +54,21 @@
   --bs-form-valid-border-color: #9ae0c4;
   --bs-form-invalid-color: #ffae97;
   --bs-form-invalid-border-color: #ffae97;
+  --bs-success-text-emphasis-rgb: 154, 224, 196;
+}
+
+tr.row-hover>td,
+tr.row-hover>th {
+  background-color: rgba(var(--bs-success-text-emphasis-rgb), 0.5) !important;
+}
+
+tr.row-active>td,
+tr.row-active>th {
+  color: var(--bs-body-bg);
+  background-color: var(--bs-success-text-emphasis) !important;
+}
+
+tr.table-row>td,
+tr.table-row>th {
+  cursor: pointer;
 }

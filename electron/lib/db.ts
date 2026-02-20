@@ -58,6 +58,8 @@ export async function getOpenTickets() {
 export async function findByPhone(phone: string) {
   if (!/\d/.test(phone)) return [];
   const digits = phone.replace(/\D/g, "");
+  const noDigits = phone.replace(/\d/g, "");
+  if (noDigits.length >= digits.length) return [];
 
   const phoneQuery = `%${digits.slice(0, 3)}%${digits.slice(3, 6)}%${digits.slice(6)}%`;
 
@@ -65,10 +67,31 @@ export async function findByPhone(phone: string) {
     SELECT *
     FROM cust
     WHERE Phone LIKE '${phoneQuery}'
-    LIMIT 5
+    LIMIT 3
   `);
 
   return [...result];
+}
+
+export async function findByCompanyName(company: string) {
+
+  const companyQuery = `%${company.replaceAll(' ', '%').toUpperCase()}%`
+
+  const result = await sendQuery(`
+    SELECT *
+    FROM cust
+    WHERE company LIKE '${companyQuery}'
+    LIMIT 3
+  `);
+
+  return [...result];
+}
+
+export async function findCompany(query: string) {
+  const phoneQuery = await findByPhone(query);
+  const companyNameQuyery = await findByCompanyName(query);
+
+  return [...phoneQuery, ...companyNameQuyery]
 }
 
 export async function findLastTicketsByCompany(company: string) {

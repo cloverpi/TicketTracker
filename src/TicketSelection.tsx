@@ -16,7 +16,7 @@ function TicketSelection( {onSelect} : Prop ) {
 
     const tabContent: Record<string, JSX.Element> = {
         new: <SearchBar onSelect={onSelect}/>,
-        open: <OpenTickets />
+        open: <OpenTickets onSelect={onSelect}/>
     }
 
     const tabHandler = (tabId: string) => {

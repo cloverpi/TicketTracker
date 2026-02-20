@@ -10,7 +10,6 @@ function App() {
   const [selectedTicket, setSelectedTicket] = useState <any|undefined> (undefined);
 
   const selectSearch = (v: any) => {
-    // console.log(v);
     setSelectedTicket(v);
   }
   
@@ -28,9 +27,11 @@ function App() {
 
   const mainView = <>
     <TicketSelection onSelect={selectSearch} />
-    <Company company={selectedTicket?.company || ''}/>
-    <TicketAccourdian company={selectedTicket?.company || ''}/>
-    <TicketEntry />
+    {selectedTicket && <>
+      <Company company={selectedTicket?.company || ''}/>
+      <TicketAccourdian company={selectedTicket?.company || ''}/>
+      <TicketEntry ticket={selectedTicket}/>
+    </>}
   </>
 
   return (

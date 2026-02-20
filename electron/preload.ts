@@ -29,6 +29,12 @@ contextBridge.exposeInMainWorld('api', {
   findByPhone: (opts: { phone: string }) => {
     return ipcRenderer.invoke("findByPhone", opts);
   },
+  findByCompanyName: (opts: { company: string }) => {
+    return ipcRenderer.invoke("findByCompanyName", opts);
+  },
+  findCompany: (opts: { query: string }) => {
+    return ipcRenderer.invoke("findCompany", opts);
+  },
   getOpenTickets: () => {
     return ipcRenderer.invoke("getOpenTickets");
   },

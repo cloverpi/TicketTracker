@@ -1,12 +1,49 @@
-import { useState } from "react";
-// import "./App.css";
+import { useEffect, useState } from "react";
 import ComboTextField from "./components/ComboTextField";
 
-function TicketEntry() {
-  const [tech, setTech] = useState('');
-  const [product, setProduct] = useState('');
-  const [call, setCall] = useState('');
-  const [branch, setBranch] = useState('');
+interface Prop {
+  ticket: any;
+  defaultTech?: string;
+}
+
+function TicketEntry({ticket, defaultTech}:Prop) {
+  const [form, setForm] = useState({
+    product: '',
+    model: '',
+    serial: '',
+    email: '',
+    contact: '',
+    phone: '',
+    calltype: '',
+    branch: '',
+    tech: '',
+    daterec: '',
+    datecomp: ''
+  })
+
+  const handleFieldUpdate = (field: string, value: string) => {
+    setForm({
+      ...form,
+      [field]: value
+    })
+  }
+
+  useEffect(()=> {
+    setForm({
+      ...ticket,
+      product: ticket.product || '',
+      model: ticket.model || '',
+      serial: ticket.serial || '',
+      email: ticket.email || '',
+      contact: ticket.contact || '',
+      phone: ticket.phone || '',
+      calltype: ticket.calltype || '',
+      branch: ticket.branch || '',
+      tech: ticket.tech || defaultTech || '',
+      daterec: ticket.daterec || '',
+      datecomp: ticket.datecomp || '',
+    });
+  }, [ticket, defaultTech]);
 
   return <>
     <ComboTextField
@@ -24,8 +61,8 @@ function TicketEntry() {
         "Networking",
         "Hardware"
       ]}
-      value={product}
-      onChange={setProduct}
+      value={form.product}
+      onChange={(v) => handleFieldUpdate('product', v)}
     />
     <div className="row g-4">
       <div className="col-6">
@@ -42,23 +79,18 @@ function TicketEntry() {
       </div>
     </div>
   
-  <div className="row g-4">
-    <div className="col-6">
-      
-    <div className="form-floating mb-2">
-      <input type="text" className="form-control" id="contact" placeholder="" />
-      <label htmlFor="contact">Contact Name</label>
-    </div>
+    <div className="row g-4">
+      <div className="col-6">    
+        <div className="form-floating mb-2">
+          <input type="text" className="form-control" id="contact" placeholder="" />
+          <label htmlFor="contact">Contact Name</label>
+        </div>
 
-    <div className="form-floating mb-2">
-      <input type="email" className="form-control" id="email" placeholder="" />
-      <label htmlFor="email">Email</label>
-    </div>
-
-
-
-      
-    </div>
+        <div className="form-floating mb-2">
+          <input type="email" className="form-control" id="email" placeholder="" />
+          <label htmlFor="email">Email</label>
+        </div>
+      </div>
 
     {/* RIGHT SIDE */}
     <div className="col-6">
@@ -71,8 +103,8 @@ function TicketEntry() {
         id="call"
         label="Call Type"
         options={["Phone", "Remote", "Onsite", "In Shop", "Other"]}
-        value={call}
-        onChange={setCall}
+        value={form.calltype}
+        onChange={(v) => handleFieldUpdate('calltype', v)}
       />
     
 
@@ -84,8 +116,8 @@ function TicketEntry() {
         id="branch"
         label="Branch"
         options={["Regina", "Saskatoon", "Other"]}
-        value={branch}
-        onChange={setBranch}
+        value={form.branch}
+        onChange={(v) => handleFieldUpdate('branch', v)}
       />
       </div>
       <div className="col-6">
@@ -93,8 +125,8 @@ function TicketEntry() {
           id="tech"
           label="Tech"
           options={["Al", "Caitlin", "Chris", "John", "Pete"]}
-          value={tech}
-          onChange={setTech}
+          value={form.tech}
+          onChange={(v) => handleFieldUpdate('tech', v)}
         />
       </div>
     </div>
