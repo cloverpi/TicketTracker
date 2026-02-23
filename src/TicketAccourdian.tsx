@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props  {
   company: string | undefined;
@@ -8,56 +8,78 @@ function TicketAccourdian({company}:Props) {
   const [ activeCord, setActiveCord ] = useState(-1);
   const [lastTickets, setLastTickets] = useState([]);
 
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+
   useEffect( () => {
     const getTickets = async () => {
+      setActiveCord(-1);
+      if (containerRef) {
+        containerRef.current?.scrollTo({
+          top: 0,
+        });
+      }
       if (!company) return;
       const res = await window.api.findLastTicketsByCompany({company});
       setLastTickets(res);
     }
     getTickets();
-    //populate these tickets.
   },[company]);
-
-  // const tickets = [
-  //   {serviceid: '   543', problem: `Potatoes aren't cooking`, solution: `Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the first item’s accordion body.`},
-  //   {serviceid: '   542', problem: `Fries won't finish`, solution: `Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the second item’s accordion body. Let’s imagine this being filled with some actual content.`},
-  //   {serviceid: '   541', problem: `Fries won't: Ding fries are done.`, solution: `Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> className. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application of how this would look in a real-world application.of how this would look in a real-world application.of how this would look in a real-world.`}
-  // ];
 
   const handleAccordianClick = (cord: number) => {
     if (activeCord == cord) {
       setActiveCord(-1);
     } else {
       setActiveCord(cord);
+        const item = itemRefs.current[cord];
+        if (!item) return;
+
+        item.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
     }
   }
 
   return (
     <>
-      <div className="accordion accordion-flush mb-2" id="ticketAccordian">
-        {lastTickets.map( (t, i) => (
-          <div key={t.serviceid} className="accordion-item">
-            <h2 className="accordion-header">
-            <button
-              id={`${i}`}
-              className="accordion-button collapsed"
-              type="button"
-              onClick={() => handleAccordianClick(i)}
+      <div
+          className="border rounded-4 shadow-sm overflow-auto mb-4"
+          ref={containerRef}
+          style={{ height: "201px" }}
+          tabIndex={-1}
+        >
+        <div className="accordion accordion-flush mb-2" id="ticketAccordian">
+          {lastTickets.map( (t, i) => (
+            <div key={t.serviceid} 
+                  className="accordion-item"
+                  ref={(el) => (itemRefs.current[i] = el)}
+                  >
+
+              <h2 className="accordion-header">
+              <button
+                id={`${i}`}
+                tabIndex={-1}
+                className={`accordion-button ${i === activeCord ? "" : "collapsed"}`}
+                type="button"
+                onClick={() => handleAccordianClick(i)}
+              >
+                #{t.serviceid.trim()}: {t.problem}
+              </button>
+            </h2>
+            <div
+              id={`flush-collapse${i}`}
+              className={`accordion-collapse collapse ${i == activeCord ? 'show' : '' }`}
+              data-bs-parent="#ticketAccordian"
             >
-              #{t.serviceid.trim()}: {t.problem}
-            </button>
-          </h2>
-          <div
-            id={`flush-collapse${i}`}
-            className={`accordion-collapse collapse ${i == activeCord ? 'show' : '' }`}
-            data-bs-parent="#ticketAccordian"
-          >
-            <div className="accordion-body">
-              {t.solution}
+              <div className="accordion-body">
+                {t.solution}
+              </div>
             </div>
           </div>
+          ))}
         </div>
-        ))}
       </div>
     </>
   );

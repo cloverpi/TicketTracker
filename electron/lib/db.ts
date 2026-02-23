@@ -67,7 +67,7 @@ export async function findByPhone(phone: string) {
     SELECT *
     FROM cust
     WHERE Phone LIKE '${phoneQuery}'
-    LIMIT 3
+    LIMIT 7
   `);
 
   return [...result];
@@ -81,7 +81,7 @@ export async function findByCompanyName(company: string) {
     SELECT *
     FROM cust
     WHERE company LIKE '${companyQuery}'
-    LIMIT 3
+    LIMIT 7
   `);
 
   return [...result];
@@ -100,7 +100,7 @@ export async function findLastTicketsByCompany(company: string) {
     FROM servtrack
     WHERE company = "${company}"
     ORDER BY serviceid DESC
-    LIMIT 3
+    LIMIT 6
   `);
   return [...result];
 }

@@ -1,9 +1,9 @@
-import TicketAccourdian from "./TicketAccourdian";
 import TicketEntry from "./TicketEntry";
 import Company from "./Company";
 import TicketSelection from "./TicketSelection";
 import { useEffect, useState } from "react";
 import Setup from "./Setup";
+import CompanyDetails from "./CompanyDetails";
 
 function App() {
   const [firstRun, setFirstRun] = useState(true);
@@ -19,6 +19,8 @@ function App() {
       setFirstRun(res);
     }
     getFirstRun();
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+
   }, []);
 
   const firstLoadView = <>
@@ -29,7 +31,8 @@ function App() {
     <TicketSelection onSelect={selectSearch} />
     {selectedTicket && <>
       <Company company={selectedTicket?.company || ''}/>
-      <TicketAccourdian company={selectedTicket?.company || ''}/>
+      <CompanyDetails companyTicket={selectedTicket} />
+      {/* <TicketAccourdian company={selectedTicket?.company || ''}/> */}
       <TicketEntry ticket={selectedTicket}/>
     </>}
   </>

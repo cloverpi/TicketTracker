@@ -1,26 +1,25 @@
 import { useState } from 'react'
-import SearchBar from './SearchBar'
-import OpenTickets from './OpenTickets'
+import TicketAccourdian from './TicketAccourdian';
+import CompanyTeamviewer from './CompanyTeamviewer';
 
 interface Prop {
-    onSelect: (v: any) => void
+    companyTicket: any;
 }
 
-function TicketSelection( {onSelect} : Prop ) {
-    const [activeTab, setActiveTab] = useState('new');
+function TicketSelection( {companyTicket} : Prop ) {
+    const [activeTab, setActiveTab] = useState('teamviewer');
 
     const tabs = [
-        { id: "new", label: "New Ticket" },
-        { id: "open", label: "Open Tickets" },
+        { id: "teamviewer", label: "Teamviewer" },
+        { id: "tickets", label: "Previous Tickets" },
     ];
 
     const tabContent: Record<string, JSX.Element> = {
-        new: <SearchBar onSelect={onSelect}/>,
-        open: <OpenTickets onSelect={onSelect}/>
+        teamviewer: <CompanyTeamviewer company={companyTicket.company}/>,
+        tickets: <TicketAccourdian company={companyTicket.company} />
     }
 
     const tabHandler = (tabId: string) => {
-        onSelect(undefined);
         setActiveTab(tabId);
     };
 
