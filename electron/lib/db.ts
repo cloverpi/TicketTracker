@@ -7,7 +7,7 @@ const connectionSettings = {
   pass: ''
 }
 
-export function connectionProperties(settings: RegistrySettings) {
+export function dbConnectionProperties(settings: RegistrySettings) {
   connectionSettings.user = settings.user;
   connectionSettings.pass = settings.pass;
 }

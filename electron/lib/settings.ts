@@ -2,11 +2,12 @@ import { app } from "electron";
 import WinReg from "winreg";
 
 const appName = app.getName();
-const secretBuf = Buffer.from('EmberIsBisemberisbisemberisbisemberisbis', 'utf-8');
+const secretBuf = Buffer.from('EmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbis', 'utf-8');
 
 export interface RegistrySettings {
     user: string;
     pass: string;
+    token: string;
 }
 
 const programKey = new WinReg({
@@ -31,17 +32,6 @@ function encodeString(str: string) {
     return XORStrings(Buffer.from(str, 'utf-8'));
 }
 
-// export function saveSettings() {
-//     programKey.set('pass', WinReg.REG_SZ, encodeString('somepass'), (err) => {
-//         if (err) {
-//             console.log('some error occurred');
-//             console.log(err);
-//             return;
-//         }
-//         console.log('set');
-//     })
-// }
-
 export async function getSettings() {
     const settings: RegistrySettings = await new Promise((resolve, reject) => {
         programKey.values((err, items) => {
@@ -58,6 +48,7 @@ export async function getSettings() {
     if (!settings.pass) return;
 
     settings.pass = decodeString(settings.pass);
+    settings.token = decodeString(settings.token);
 
     return settings;
 }
@@ -73,6 +64,6 @@ export async function setSettings(user: string, pass: string) {
         if (err) {
             console.log('Error creating pass');
             console.log(err)
-        };
+        }
     });
 }

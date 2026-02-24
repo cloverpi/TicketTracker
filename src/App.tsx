@@ -19,8 +19,6 @@ function App() {
       setFirstRun(res);
     }
     getFirstRun();
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-
   }, []);
 
   const firstLoadView = <>
@@ -32,7 +30,6 @@ function App() {
     {selectedTicket && <>
       <Company company={selectedTicket?.company || ''}/>
       <CompanyDetails companyTicket={selectedTicket} />
-      {/* <TicketAccourdian company={selectedTicket?.company || ''}/> */}
       <TicketEntry ticket={selectedTicket}/>
     </>}
   </>

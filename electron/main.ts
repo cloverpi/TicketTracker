@@ -1,8 +1,9 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { connect, connectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
+import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
 import { getSettings, setSettings } from './lib/settings'
+import { getTeamviewerDevices, teamviewerConnectionProperties } from './lib/teamviewer'
 
 
 
@@ -33,11 +34,15 @@ let firstRun: boolean = false;
 async function createWindow() {
   try {
     const settings = await getSettings();
-    if (settings) {
-      connectionProperties(settings);
+    if (settings && settings.user && settings.pass) {
+      dbConnectionProperties(settings);
       await connect();
     } else {
       firstRun = true;
+    }
+    if (settings && settings.token) {
+      teamviewerConnectionProperties(settings)
+      // const tv = await getTeamviewerDevices();
     }
   } catch (e) {
     firstRun = true;

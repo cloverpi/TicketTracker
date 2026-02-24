@@ -26,7 +26,7 @@ function TicketSelection( {onSelect} : Prop ) {
 
     return (
         <>
-            <ul className="nav nav-tabs mb-3">
+            <ul className="nav nav-tabs mb-2">
                 {tabs.map((tab) => (
                     <li className="nav-item" key={tab.id}>
                     <button

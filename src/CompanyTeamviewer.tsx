@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import tv from './config/teamviewer.js'
 import { createDeviceSearch } from "./lib/helpers.js";
+import { TvResponse } from "../electron/lib/teamviewer.js";
 
 interface Prop {
     company: any;
 }
 
 function CompanyTeamviewer({company}:Prop) {
-  const [teamviewers, setTeamviewers] = useState<any>([]);
+  const [teamviewers, setTeamviewers] = useState([]);
   const [editingRow, setEditingRow] = useState<number | undefined>(undefined);
   const [password, setPassword] = useState('');
   const [activeRow, setActiveRow] = useState(-1);

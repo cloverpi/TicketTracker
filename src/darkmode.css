@@ -105,3 +105,17 @@ tr.table-row>th {
   padding: 0;
   margin: -4px;
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}

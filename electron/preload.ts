@@ -41,6 +41,12 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke("findLastTicketsByCompany", opts);
   },
 
+  //other
+  getTeamviewerDevices: (opts?: { force: boolean }) => {
+    return ipcRenderer.invoke("getTeamviewerDevices", opts);
+  },
+
+
 });
 
 contextBridge.exposeInMainWorld('app', {
