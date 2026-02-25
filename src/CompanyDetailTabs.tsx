@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TicketAccourdian from './TicketAccourdian';
 import CompanyTeamviewer from './CompanyTeamviewer';
+import { createDeviceSearch } from './lib/helpers';
+import { tvDevice } from '../electron/lib/teamviewer';
+// import { devices } from './config/teamviewer.js'
 
 interface Prop {
     companyTicket: any;
 }
 
-function TicketSelection( {companyTicket} : Prop ) {
+function CompanyDetailTabs( {companyTicket} : Prop ) {
+    const [teamviewers, setTeamviewers] = useState<tvDevice[]>([]);
     const [activeTab, setActiveTab] = useState('teamviewer');
     const [loading, setLoading] = useState(false);
 
@@ -15,6 +19,25 @@ function TicketSelection( {companyTicket} : Prop ) {
         { id: "tickets", label: "Previous Tickets" },
     ];
 
+    useEffect(() => {
+        const getTeamviewers = async () => {
+            const devices = await window.api.getTeamviewerDevices() as tvDevice[];
+            console.log(devices);
+
+            const engine = createDeviceSearch(devices);
+
+            const results = engine.search(companyTicket.company);
+            console.log(results);
+            const resultDevices = results.map((d)=> {
+                const {score, ...resultDevice} = d
+                return resultDevice
+            });
+
+            setTeamviewers(resultDevices);
+        }
+        getTeamviewers();
+    }, [companyTicket]);
+
     const handleReload = () => {
         setLoading(true);
         setTimeout(()=>setLoading(false), 2000)
@@ -22,7 +45,7 @@ function TicketSelection( {companyTicket} : Prop ) {
     }
 
     const tabContent: Record<string, JSX.Element> = {
-        teamviewer: <CompanyTeamviewer company={companyTicket.company}/>,
+        teamviewer: <CompanyTeamviewer devices={teamviewers}/>,
         tickets: <TicketAccourdian company={companyTicket.company} />
     }
 
@@ -66,14 +89,14 @@ function TicketSelection( {companyTicket} : Prop ) {
                         viewBox="0 0 20 20"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="1.6667"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className={`icon icon-tabler icons-tabler-outline icon-tabler-reload ${loading && 'spin'}`}
+                        strokeWidth="1.6667"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`icon icon-tabler icons-tabler-outline icon-tabler-reload ${loading ? 'spin' : ''}`}
                         >
-                            <path stroke="none" d="M0 0h20v20H0z" fill="none"/>
-                            <path d="M16.611 10.867a6.667 6.667 0 1 1 -8.271 -7.324c3.249 -.833 6.613 .839 7.854 3.956" />
-                            <path d="M16.667 3.333v4.167h-4.167" />
+                        <path stroke="none" d="M0 0h20v20H0z" fill="none" />
+                        <path d="M16.611 10.867a6.667 6.667 0 1 1 -8.271 -7.324c3.249 -.833 6.613 .839 7.854 3.956" />
+                        <path d="M16.667 3.333v4.167h-4.167" />
                     </svg>
                 </button>
             </>} 
@@ -83,4 +106,4 @@ function TicketSelection( {companyTicket} : Prop ) {
     )
 }
 
-export default TicketSelection
+export default CompanyDetailTabs

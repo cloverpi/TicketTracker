@@ -1,69 +1,26 @@
 import { useEffect, useState } from "react";
-import tv from './config/teamviewer.js'
-import { createDeviceSearch } from "./lib/helpers.js";
-import { TvResponse } from "../electron/lib/teamviewer.js";
+import { tvDevice } from "../electron/lib/teamviewer";
 
 interface Prop {
-    company: any;
+  devices: tvDevice[]
 }
 
-function CompanyTeamviewer({company}:Prop) {
-  const [teamviewers, setTeamviewers] = useState([]);
-  const [editingRow, setEditingRow] = useState<number | undefined>(undefined);
+function CompanyTeamviewer({devices}:Prop) {
+  // const [teamviewers, setTeamviewers] = useState(devices || []);
+  const [editingRow, setEditingRow] = useState(-1);
   const [password, setPassword] = useState('');
   const [activeRow, setActiveRow] = useState(-1);
   const [hoverRow, setHoverRow] = useState(-1);
 
-useEffect(() => {
-  const {devices} = tv;
-  const engine = createDeviceSearch(devices)
-
-  const results = engine.search(company);
-  console.log(results);
-  setTeamviewers(results);
-  // console.log(devices.map( d=> d.alias ));
-  // Prevent running on empty input
-  // if (!company || company.length < 2) return;
-
-  // const performSemanticSearch = async () => {
-  //   // 1. Load the model (Transformers.js handles the caching automatically)
-  //   const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
-
-  //   // 2. Vectorize your devices (The "meaning" of your data)
-  //   // In a real app, you'd want to memoize 'deviceVectors' so this only happens once
-  //   const { devices } = tv;
-  //   const deviceVectors = await Promise.all(
-  //     devices.map(async (d) => ({
-  //       ...d,
-  //       embedding: (await pipe(d.alias, { pooling: 'mean', normalize: true })).data
-  //     }))
-  //   );
-
-  //   // 3. Vectorize the search query (The "meaning" of your search)
-  //   const queryResult = await pipe(company, { pooling: 'mean', normalize: true });
-  //   const queryEmbedding = queryResult.data;
-
-  //   // 4. Score them by semantic similarity
-  //   const scored = deviceVectors.map(device => ({
-  //     ...device,
-  //     // cos_sim returns 1.0 for perfect meaning match, 0.0 for unrelated
-  //     score: cos_sim(queryEmbedding, device.embedding)
-  //   }));
-
-  //   // 5. Sort and Update State
-  //   const topMatches = scored
-  //     .sort((a, b) => b.score - a.score)
-  //     .slice(0, 15);
-
-  //   setTeamviewers(topMatches);
-  // };
-
-  // performSemanticSearch().catch(console.error);
-}, [company]);
 
   const handleRowClick = (index: number) => {
     setActiveRow(index);
   }
+
+  useEffect( () => {
+    setEditingRow(-1);
+    setActiveRow(-1);
+  }, [devices]);
 
   return (
     <>
@@ -89,7 +46,7 @@ useEffect(() => {
           </thead>
           <tbody>
             {
-              teamviewers.map((t, i: number) => (
+              devices.map((t, i: number) => (
                 <tr key={t.device_id} id={t.device_id} 
                 className={`table-row ${activeRow == i ? 'row-active' : ''} ${hoverRow == i ? 'row-hover' : ''}`}
                 onMouseEnter={()=>setHoverRow(i)}

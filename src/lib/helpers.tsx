@@ -1,15 +1,16 @@
 import Fuse from "fuse.js"
+import { tvDevice } from "../../electron/lib/teamviewer"
 
-type TvDevice = {
-  remotecontrol_id: string
-  device_id: string
-  alias: string
-  groupid: string
-  online_state: string
-  assigned_to: boolean
-  supported_features?: string
-  teamviewer_id: number
-}
+// type TvDevice = {
+//   remotecontrol_id: string
+//   device_id: string
+//   alias: string
+//   groupid: string
+//   online_state: string
+//   assigned_to: boolean
+//   supported_features?: string
+//   teamviewer_id: number
+// }
 
 export function normalizeAlias(input: string): string {
   let s = input.toUpperCase()
@@ -51,18 +52,7 @@ export function normalizeAlias(input: string): string {
   return s
 }
 
-// type TvDevice = {
-//   remotecontrol_id: string
-//   device_id: string
-//   alias: string
-//   groupid: string
-//   online_state: string
-//   assigned_to: boolean
-//   supported_features?: string
-//   teamviewer_id: number
-// }
-
-export function createDeviceSearch(devices: TvDevice[]) {
+export function createDeviceSearch(devices: tvDevice[]) {
   const prepared = devices.map(d => ({
     ...d,
     normalized: normalizeAlias(d.alias)

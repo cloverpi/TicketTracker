@@ -1,6 +1,6 @@
 import { RegistrySettings } from "./settings";
 
-export type device = {
+export type tvDevice = {
     remotecontrol_id: string,
     device_id: string,
     alias: string,
@@ -13,12 +13,12 @@ export type device = {
 }
 
 export type TvResponse = {
-    devices: device[];
+    devices: tvDevice[];
 }
 
-const timeout = 120000; // 2 minutes.
+const timeout = 180000; // 3 minutes.
 let lastUpdate = Date.now();
-let tv: TvResponse | undefined = undefined;
+let tv: tvDevice[] | undefined = undefined;
 
 const connectionSettings = {
     url: 'https://webapi.teamviewer.com/api/v1/devices',
@@ -34,6 +34,7 @@ export async function getTeamviewerDevices(force = false) {
     if (!token) return;
     try {
         if (!tv || force || Date.now() - lastUpdate >= timeout) {
+            console.log('fetching new');
             const res = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -42,9 +43,10 @@ export async function getTeamviewerDevices(force = false) {
                 }
             });
             const data: TvResponse = await res.json();
-            tv = data;
+            const { devices } = data;
+            tv = devices;
             lastUpdate = Date.now();
-            return data;
+            return devices;
         } else {
             return tv;
         }

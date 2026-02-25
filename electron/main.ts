@@ -128,4 +128,10 @@ ipcMain.handle("getOpenTickets", async () => {
   return await getOpenTickets();
 });
 
+ipcMain.handle("getTeamviewerDevices", async (_event, opts) => {
+  return await getTeamviewerDevices(opts);
+});
+
+
+
 

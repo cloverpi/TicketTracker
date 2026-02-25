@@ -3,7 +3,7 @@ import Company from "./Company";
 import TicketSelection from "./TicketSelection";
 import { useEffect, useState } from "react";
 import Setup from "./Setup";
-import CompanyDetails from "./CompanyDetails";
+import CompanyDetailTabs from "./CompanyDetailTabs";
 
 function App() {
   const [firstRun, setFirstRun] = useState(true);
@@ -29,7 +29,7 @@ function App() {
     <TicketSelection onSelect={selectSearch} />
     {selectedTicket && <>
       <Company company={selectedTicket?.company || ''}/>
-      <CompanyDetails companyTicket={selectedTicket} />
+      <CompanyDetailTabs companyTicket={selectedTicket} />
       <TicketEntry ticket={selectedTicket}/>
     </>}
   </>

@@ -1,7 +1,5 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 
-import { TvResponse } from './lib/teamviewer'
-
 declare namespace NodeJS {
   interface ProcessEnv {
     /**
@@ -23,25 +21,23 @@ declare namespace NodeJS {
   }
 }
 
-export { };
-// Used in Renderer process, expose in `preload.ts`
-declare global {
-  interface Window {
-    ipcRenderer: import('electron').IpcRenderer,
-    api: {
-      //db
-      findByPhone: (opts: { phone: string }) => Promise<[]>,
-      findByCompanyName: (opts: { company: string }) => Promise<[]>,
-      findCompany: (opts: { query: string }) => Promise<[]>,
-      getOpenTickets: () => Promise<[]>,
-      findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>
 
-      //other
-      getTeamviewerDevices: (opts?: { force: boolean }) => Promise<TvResponse>
-    },
-    app: {
-      firstRun: () => Promise<boolean>,
-      updateSettings: (opts: { user: string, pass: string }) => Promise<boolean>
-    }
+// Used in Renderer process, expose in `preload.ts`
+interface Window {
+  ipcRenderer: import('electron').IpcRenderer,
+  api: {
+    //db
+    findByPhone: (opts: { phone: string }) => Promise<[]>,
+    findByCompanyName: (opts: { company: string }) => Promise<[]>,
+    findCompany: (opts: { query: string }) => Promise<[]>,
+    getOpenTickets: () => Promise<[]>,
+    findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>
+
+    //other
+    getTeamviewerDevices: (opts?: { force: boolean }) => Promise<[]>
+  },
+  app: {
+    firstRun: () => Promise<boolean>,
+    updateSettings: (opts: { user: string, pass: string }) => Promise<boolean>
   }
 }
