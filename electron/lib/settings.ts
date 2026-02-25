@@ -1,4 +1,6 @@
 import { app } from "electron";
+import fs from 'fs/promises';
+import path from "path";
 import WinReg from "winreg";
 
 const appName = app.getName();
@@ -14,6 +16,11 @@ const programKey = new WinReg({
     hive: WinReg.HKCU,
     key: `\\Software\\${appName}`
 });
+
+const fileSettings = {
+    location: path.join(app.getPath("userData"), "settings.json")
+}
+let writeQueue = Promise.resolve();
 
 function XORStrings(buf: Buffer) {
     for (let i = 0; i < buf.length; i++) {
@@ -66,4 +73,35 @@ export async function setSettings(user: string, pass: string) {
             console.log(err)
         }
     });
+}
+
+export async function saveAppDataSettings(data) {
+    try {
+        if (!data) return;
+
+        writeQueue = writeQueue.then(async () => {
+            const dir = path.dirname(fileSettings.location)
+            await fs.mkdir(dir, { recursive: true })
+            console.log('saving.');
+            return fs.writeFile(fileSettings.location, JSON.stringify(data, null, 2), "utf8");
+        }).catch(err => {
+            console.error(err);
+        });
+
+        return writeQueue;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export async function getAppDataSettings() {
+    try {
+        const jsonText = await fs.readFile(fileSettings.location, 'utf8')
+        const appdata = JSON.parse(jsonText);
+
+        return appdata;
+    } catch (e) {
+        console.log(e);
+        return;
+    }
 }

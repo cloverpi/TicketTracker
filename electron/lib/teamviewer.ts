@@ -1,4 +1,5 @@
-import { RegistrySettings } from "./settings";
+import { getAppDataSettings, RegistrySettings, saveAppDataSettings } from "./settings";
+import { defaultSearch, searchMap } from "./tvPrefilledSearchDefaults";
 
 export type tvDevice = {
     remotecontrol_id: string,
@@ -16,6 +17,8 @@ export type TvResponse = {
     devices: tvDevice[];
 }
 
+let customSearch: searchMap = {}
+
 const timeout = 180000; // 3 minutes.
 let lastUpdate = Date.now();
 let tv: tvDevice[] | undefined = undefined;
@@ -29,11 +32,12 @@ export function teamviewerConnectionProperties(settings: RegistrySettings) {
     connectionSettings.token = settings.token;
 }
 
-export async function getTeamviewerDevices(force = false) {
+export async function getTeamviewerDevices({ force = false }) {
     const { token, url } = connectionSettings;
     if (!token) return;
     try {
         if (!tv || force || Date.now() - lastUpdate >= timeout) {
+            lastUpdate = Date.now();
             console.log('fetching new');
             const res = await fetch(url, {
                 method: 'GET',
@@ -45,7 +49,7 @@ export async function getTeamviewerDevices(force = false) {
             const data: TvResponse = await res.json();
             const { devices } = data;
             tv = devices;
-            lastUpdate = Date.now();
+
             return devices;
         } else {
             return tv;
@@ -54,5 +58,27 @@ export async function getTeamviewerDevices(force = false) {
         console.log(e);
         return;
     }
+}
 
+export async function setPrefilledSearchDefault({ companyName = '', query = '' }) {
+    if (companyName == '') return;
+    if (!query || query == '') {
+        delete customSearch[companyName];
+    } else {
+        customSearch[companyName] = query;
+    }
+    await saveAppDataSettings(customSearch);
+}
+
+export async function getPrefilledSearchDefault({ companyName = '' }) {
+    if (companyName == '') return;
+    if (customSearch[companyName]) return customSearch[companyName];
+    return defaultSearch[companyName];
+}
+
+export async function getCustomSearchFromFile() {
+    const appDataSettings = await getAppDataSettings();
+    if (appDataSettings) {
+        customSearch = appDataSettings;
+    }
 }

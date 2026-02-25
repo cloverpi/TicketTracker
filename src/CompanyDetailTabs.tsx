@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import TicketAccourdian from './TicketAccourdian';
 import CompanyTeamviewer from './CompanyTeamviewer';
-import { createDeviceSearch } from './lib/helpers';
+import { findMatches } from './lib/helpers';
 import { tvDevice } from '../electron/lib/teamviewer';
-// import { devices } from './config/teamviewer.js'
 
 interface Prop {
     companyTicket: any;
@@ -11,41 +10,68 @@ interface Prop {
 
 function CompanyDetailTabs( {companyTicket} : Prop ) {
     const [teamviewers, setTeamviewers] = useState<tvDevice[]>([]);
+    const [filteredTeamviewers, setFilteredTeamviewers] = useState<tvDevice[]>([]);
+    const [searchFilter, setSearchFilter] = useState<string>('');
+    const [searchTimer, setSearchTimer] = useState<ReturnType<typeof setTimeout> | undefined>(undefined);
     const [activeTab, setActiveTab] = useState('teamviewer');
     const [loading, setLoading] = useState(false);
+
+    const timeout = 750;
 
     const tabs = [
         { id: "teamviewer", label: "Teamviewer" },
         { id: "tickets", label: "Previous Tickets" },
     ];
 
+    const getTeamviewers =  useCallback(async (force: boolean) => {
+        const devices = await window.api.getTeamviewerDevices({force}) as tvDevice[];
+
+        setLoading(false);
+        setTeamviewers(devices);
+    }, []);
+
     useEffect(() => {
-        const getTeamviewers = async () => {
-            const devices = await window.api.getTeamviewerDevices() as tvDevice[];
-            console.log(devices);
-
-            const engine = createDeviceSearch(devices);
-
-            const results = engine.search(companyTicket.company);
-            console.log(results);
-            const resultDevices = results.map((d)=> {
-                const {score, ...resultDevice} = d
-                return resultDevice
-            });
-
-            setTeamviewers(resultDevices);
+        const setFilters = async () => {
+            const defaultQuery = await window.app.getPrefilledSearchDefault({companyName: companyTicket.company});
+            if (defaultQuery) {
+                const results = findMatches(teamviewers, defaultQuery);
+                setFilteredTeamviewers(results);
+            } else {
+                const firstWord = companyTicket.company.split(' ')[0];
+                const results = findMatches(teamviewers, firstWord)
+                setFilteredTeamviewers(results);
+            }
         }
-        getTeamviewers();
-    }, [companyTicket]);
+        setFilters();
+    }, [teamviewers, companyTicket.company]);
+
+    useEffect(() => {
+        setSearchFilter('');
+    }, [companyTicket.company]);
+
+
+    useEffect(() => {
+        setLoading(true);
+        getTeamviewers(false);
+    }, [getTeamviewers]);
+
+    const handleFilterChange = (value: string) => {
+        clearTimeout(searchTimer);
+        setSearchFilter(value);
+        setSearchTimer(setTimeout(async () => {
+            window.app.setPrefilledSearchDefault({companyName: companyTicket.company, query: value});
+            getTeamviewers(false);
+            clearTimeout(searchTimer);
+        }, timeout));
+    }
 
     const handleReload = () => {
         setLoading(true);
-        setTimeout(()=>setLoading(false), 2000)
-        console.log('reload');
+        getTeamviewers(true);
     }
 
     const tabContent: Record<string, JSX.Element> = {
-        teamviewer: <CompanyTeamviewer devices={teamviewers}/>,
+        teamviewer: <CompanyTeamviewer devices={filteredTeamviewers}/>,
         tickets: <TicketAccourdian company={companyTicket.company} />
     }
 
@@ -76,6 +102,8 @@ function CompanyDetailTabs( {companyTicket} : Prop ) {
                 className="form-control "
                 style={{ width: "200px" }}
                 placeholder="Search"
+                value={searchFilter}
+                onChange={(e) => handleFilterChange(e.target.value)}
                 />
 
                 <button

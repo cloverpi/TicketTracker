@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
 import { getSettings, setSettings } from './lib/settings'
-import { getTeamviewerDevices, teamviewerConnectionProperties } from './lib/teamviewer'
+import { getCustomSearchFromFile, getPrefilledSearchDefault, getTeamviewerDevices, setPrefilledSearchDefault, teamviewerConnectionProperties } from './lib/teamviewer'
 
 
 
@@ -42,7 +42,8 @@ async function createWindow() {
     }
     if (settings && settings.token) {
       teamviewerConnectionProperties(settings)
-      // const tv = await getTeamviewerDevices();
+      await getTeamviewerDevices({ force: true });
+      await getCustomSearchFromFile();
     }
   } catch (e) {
     firstRun = true;
@@ -130,6 +131,14 @@ ipcMain.handle("getOpenTickets", async () => {
 
 ipcMain.handle("getTeamviewerDevices", async (_event, opts) => {
   return await getTeamviewerDevices(opts);
+});
+
+ipcMain.handle("getPrefilledSearchDefault", async (_event, opts) => {
+  return await getPrefilledSearchDefault(opts);
+});
+
+ipcMain.handle("setPrefilledSearchDefault", async (_event, opts) => {
+  return await setPrefilledSearchDefault(opts);
 });
 
 

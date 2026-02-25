@@ -31,13 +31,15 @@ interface Window {
     findByCompanyName: (opts: { company: string }) => Promise<[]>,
     findCompany: (opts: { query: string }) => Promise<[]>,
     getOpenTickets: () => Promise<[]>,
-    findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>
+    findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>,
 
     //other
     getTeamviewerDevices: (opts?: { force: boolean }) => Promise<[]>
   },
   app: {
     firstRun: () => Promise<boolean>,
-    updateSettings: (opts: { user: string, pass: string }) => Promise<boolean>
+    updateSettings: (opts: { user: string, pass: string }) => Promise<boolean>,
+    getPrefilledSearchDefault: (opts: { companyName: string }) => Promise<string>,
+    setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => () => void,
   }
 }

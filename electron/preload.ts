@@ -57,5 +57,10 @@ contextBridge.exposeInMainWorld('app', {
   updateSettings: (opts: { user: string, pass: string }) => {
     return ipcRenderer.invoke("updateSettings", opts);
   },
-
+  getPrefilledSearchDefault: (opts: { companyName: string }) => {
+    return ipcRenderer.invoke("getPrefilledSearchDefault", opts);
+  },
+  setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => {
+    return ipcRenderer.invoke("setPrefilledSearchDefault", opts);
+  },
 });
