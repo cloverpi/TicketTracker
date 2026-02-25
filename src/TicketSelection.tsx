@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import SearchBar from './SearchBar'
 import OpenTickets from './OpenTickets'
+import { CompanyTicket } from '../electron/lib/db-types';
 
 interface Prop {
-    onSelect: (v: any) => void
+    onSelect: (v: CompanyTicket | undefined) => void
 }
 
 function TicketSelection( {onSelect} : Prop ) {

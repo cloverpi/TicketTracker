@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import ComboTextField from "./components/ComboTextField";
+import { CompanyTicket } from "../electron/lib/db-types";
 
 interface Prop {
-  ticket: any;
+  ticket: CompanyTicket;
   defaultTech?: string;
 }
 

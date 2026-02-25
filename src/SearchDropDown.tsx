@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { CompanyTicket } from "../electron/lib/db-types";
 
 interface Props {
-    items: any[];
-    onSelect: (company: any) => void;
+    items: CompanyTicket[];
+    onSelect: (company: CompanyTicket) => void;
 }
 
 function SearchDropDown( {items, onSelect} : Props ) {

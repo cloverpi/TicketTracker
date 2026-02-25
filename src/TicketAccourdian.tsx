@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { CompanyTicket } from "../electron/lib/db-types";
 
 interface Props  {
   company: string | undefined;
@@ -6,7 +7,7 @@ interface Props  {
 
 function TicketAccourdian({company}:Props) {
   const [ activeCord, setActiveCord ] = useState(-1);
-  const [lastTickets, setLastTickets] = useState([]);
+  const [lastTickets, setLastTickets] = useState<CompanyTicket[]>([]);
 
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -21,7 +22,7 @@ function TicketAccourdian({company}:Props) {
         });
       }
       if (!company) return;
-      const res = await window.api.findLastTicketsByCompany({company});
+      const res: CompanyTicket[] = await window.api.findLastTicketsByCompany({company});
       setLastTickets(res);
     }
     getTickets();
@@ -65,7 +66,7 @@ function TicketAccourdian({company}:Props) {
                 type="button"
                 onClick={() => handleAccordianClick(i)}
               >
-                #{t.serviceid.trim()}: {t.problem}
+                #{t.serviceid?.trim()}: {t.problem}
               </button>
             </h2>
             <div

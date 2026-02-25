@@ -3,9 +3,10 @@ import TicketAccourdian from './TicketAccourdian';
 import CompanyTeamviewer from './CompanyTeamviewer';
 import { findMatches } from './lib/helpers';
 import { tvDevice } from '../electron/lib/teamviewer';
+import { CompanyTicket } from '../electron/lib/db-types';
 
 interface Prop {
-    companyTicket: any;
+    companyTicket: CompanyTicket;
 }
 
 function CompanyDetailTabs( {companyTicket} : Prop ) {

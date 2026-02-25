@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
+import { CompanyTicket } from "../electron/lib/db-types";
 
 interface Prop {
-    onSelect: (v: any) => void
+    onSelect: (v: CompanyTicket | undefined) => void
 }
 
 function OpenTickets({onSelect}:Prop) {
-  const [openTickets, setOpenTickets] = useState([]);
+  const [openTickets, setOpenTickets] = useState<CompanyTicket[]>([]);
   const [activeRow, setActiveRow] = useState(-1);
   const [hoverRow, setHoverRow] = useState(-1);
 
   useEffect(() => {
     const getTickets = async () => {
-      const res = await window.api.getOpenTickets();
+      const res: CompanyTicket[] = await window.api.getOpenTickets();
       setOpenTickets(res);
     }
     getTickets();
@@ -52,7 +53,7 @@ function OpenTickets({onSelect}:Prop) {
                 onMouseEnter={()=>setHoverRow(i)}
                 onClick={()=>handleRowClick(i)}
                 >
-                  <td>{t.daterec}</td>
+                  <td>{t.daterec?.toDateString()}</td>
                   <td className="text-truncate">{t.company}</td>
                   <td className="text-truncate">{t.problem}</td>
                 </tr>

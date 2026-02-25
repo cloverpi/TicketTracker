@@ -4,12 +4,13 @@ import TicketSelection from "./TicketSelection";
 import { useEffect, useState } from "react";
 import Setup from "./Setup";
 import CompanyDetailTabs from "./CompanyDetailTabs";
+import { CompanyTicket } from "../electron/lib/db-types";
 
 function App() {
   const [firstRun, setFirstRun] = useState(true);
-  const [selectedTicket, setSelectedTicket] = useState <any|undefined> (undefined);
+  const [selectedTicket, setSelectedTicket] = useState <CompanyTicket|undefined> (undefined);
 
-  const selectSearch = (v: any) => {
+  const selectSearch = (v: CompanyTicket | undefined) => {
     setSelectedTicket(v);
   }
   
