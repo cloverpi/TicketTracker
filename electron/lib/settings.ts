@@ -7,15 +7,22 @@ const appName = app.getName();
 const secretBuf = Buffer.from('EmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbis', 'utf-8');
 
 export interface RegistrySettings {
-    user: string;
-    pass: string;
-    token: string;
+    user: string,
+    pass: string,
+    token: string,
+    displayName: string,
+    teamviewerLocation: string
 }
 
 const programKey = new WinReg({
     hive: WinReg.HKCU,
     key: `\\Software\\${appName}`
 });
+
+const outputSettings = {
+    displayName: '',
+    teamviewerLocation: ''
+}
 
 const fileSettings = {
     location: path.join(app.getPath("userData"), "settings.json")
@@ -57,10 +64,13 @@ export async function getSettings() {
     settings.pass = decodeString(settings.pass);
     settings.token = decodeString(settings.token);
 
+    outputSettings.displayName = settings.displayName;
+    outputSettings.teamviewerLocation = settings.teamviewerLocation;
+
     return settings;
 }
 
-export async function setSettings(user: string, pass: string) {
+export async function setSettings(user: string, pass: string, displayName: string, teamviewerLocation: string) {
     programKey.set('user', WinReg.REG_SZ, user, (err) => {
         if (err) {
             console.log('Error creating user');
@@ -73,9 +83,23 @@ export async function setSettings(user: string, pass: string) {
             console.log(err)
         }
     });
+    programKey.set('displayName', WinReg.REG_SZ, displayName, (err) => {
+        if (err) {
+            console.log('Error creating displayName');
+            console.log(err)
+        }
+    });
+    programKey.set('teamviewerLocation', WinReg.REG_SZ, `"${teamviewerLocation}"`, (err) => {
+        if (err) {
+            console.log('Error creating teamviewer location');
+            console.log(err)
+        }
+    });
+    outputSettings.displayName = displayName;
+    outputSettings.teamviewerLocation = teamviewerLocation;
 }
 
-export async function saveAppDataSettings(data) {
+export async function saveAppDataSettings(data: Record<string, string>) {
     try {
         if (!data) return;
 
@@ -104,4 +128,8 @@ export async function getAppDataSettings() {
         console.log(e);
         return;
     }
+}
+
+export function getCachedSettings() {
+    return outputSettings;
 }

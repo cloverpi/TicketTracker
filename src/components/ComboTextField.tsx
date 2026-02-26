@@ -84,6 +84,11 @@ useEffect(() => {
       if (open && activeIndex >= 0 && activeIndex < options.length) {
         pick(options[activeIndex]);
       }
+      console.log(activeIndex)
+      if (open && activeIndex == -1){
+        e.preventDefault();
+        pick(options[0]);
+      }
       return;
     }
     if (e.key === "Escape") {
@@ -121,7 +126,7 @@ useEffect(() => {
       <button
         type="button"
         tabIndex={-1}
-        className="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split position-absolute top-0 end-0 h-100"
+        className="btn btn-outline-primary dropdown-toggle dropdown-toggle-split position-absolute top-0 end-0 h-100"
         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {

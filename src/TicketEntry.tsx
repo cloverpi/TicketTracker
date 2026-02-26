@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ComboTextField from "./components/ComboTextField";
-import { CompanyTicket } from "../electron/lib/db-types";
+import { CompanyTicket } from "../electron/lib/dbTypes";
+import { getDateString } from "./lib/helpers";
 
 interface Prop {
   ticket: CompanyTicket;
@@ -19,7 +20,7 @@ function TicketEntry({ticket, defaultTech}:Prop) {
     branch: '',
     tech: '',
     daterec: '',
-    datecomp: ''
+    datecomp: '',
   })
 
   const handleFieldUpdate = (field: string, value: string) => {
@@ -32,17 +33,17 @@ function TicketEntry({ticket, defaultTech}:Prop) {
   useEffect(()=> {
     setForm({
       ...ticket,
-      product: ticket.product || '',
-      model: ticket.model || '',
-      serial: ticket.serial || '',
-      email: ticket.email || '',
-      contact: ticket.contact || '',
-      phone: ticket.phone || '',
-      calltype: ticket.calltype || '',
-      branch: ticket.branch || '',
-      tech: ticket.tech || defaultTech || '',
-      daterec: ticket.daterec || '',
-      datecomp: ticket.datecomp || '',
+      product: ticket.product ?? '',
+      model: ticket.model ?? '',
+      serial: ticket.serialnum ?? '',
+      email: ticket.email ?? '',
+      contact: ticket.contact ?? '',
+      phone: ticket.phone ?? '',
+      calltype: ticket.calltype ?? '',
+      branch: ticket.branch ?? '',
+      tech: ticket.tech ?? defaultTech ?? '',
+      daterec: getDateString(ticket.daterec) ?? getDateString(new Date()) ?? '',
+      datecomp: getDateString(ticket.datecomp) ?? '',
     });
   }, [ticket, defaultTech]);
 
@@ -147,6 +148,7 @@ function TicketEntry({ticket, defaultTech}:Prop) {
           className="form-control"
           id="dateReceived"
           placeholder=""
+          value={form.daterec}
         />
         <label htmlFor="dateReceived">Date Received</label>
         </div>
@@ -156,6 +158,7 @@ function TicketEntry({ticket, defaultTech}:Prop) {
             className="form-control"
             id="dateCompleted"
             placeholder=""
+            value={form.datecomp}
           />
           <label htmlFor="dateCompleted">Date Completed</label>
         </div>

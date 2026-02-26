@@ -54,8 +54,14 @@ contextBridge.exposeInMainWorld('app', {
   firstRun: () => {
     return ipcRenderer.invoke("firstRun");
   },
-  updateSettings: (opts: { user: string, pass: string }) => {
+  updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string }) => {
     return ipcRenderer.invoke("updateSettings", opts);
+  },
+  getCachedSettings: () => {
+    return ipcRenderer.invoke("getCachedSettings");
+  },
+  selectTeamviewer: () => {
+    return ipcRenderer.invoke("selectTeamviewer");
   },
   getPrefilledSearchDefault: (opts: { companyName: string }) => {
     return ipcRenderer.invoke("getPrefilledSearchDefault", opts);

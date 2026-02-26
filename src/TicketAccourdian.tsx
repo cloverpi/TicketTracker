@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CompanyTicket } from "../electron/lib/db-types";
+import { CompanyTicket } from "../electron/lib/dbTypes";
 
 interface Props  {
   company: string | undefined;

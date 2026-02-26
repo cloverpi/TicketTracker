@@ -38,7 +38,9 @@ interface Window {
   },
   app: {
     firstRun: () => Promise<boolean>,
-    updateSettings: (opts: { user: string, pass: string }) => Promise<boolean>,
+    updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string }) => Promise<boolean>,
+    getCachedSettings: () => Promise<Record<'displayName' | 'teamviewerLocation', string>>,
+    selectTeamviewer: () => Promise<string | undefined>,
     getPrefilledSearchDefault: (opts: { companyName: string }) => Promise<string>,
     setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => () => void,
   }

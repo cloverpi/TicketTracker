@@ -3,7 +3,7 @@ import TicketAccourdian from './TicketAccourdian';
 import CompanyTeamviewer from './CompanyTeamviewer';
 import { findMatches } from './lib/helpers';
 import { tvDevice } from '../electron/lib/teamviewer';
-import { CompanyTicket } from '../electron/lib/db-types';
+import { CompanyTicket } from '../electron/lib/dbTypes';
 
 interface Prop {
     companyTicket: CompanyTicket;
@@ -26,10 +26,10 @@ function CompanyDetailTabs( {companyTicket} : Prop ) {
 
     const getTeamviewers =  useCallback(async (force: boolean) => {
         const devices = await window.api.getTeamviewerDevices({force}) as tvDevice[];
-
+        console.log(devices);
         setLoading(false);
         setTeamviewers(devices);
-    }, []);
+    }, [companyTicket]);
 
     useEffect(() => {
         const setFilters = async () => {

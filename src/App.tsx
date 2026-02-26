@@ -4,11 +4,12 @@ import TicketSelection from "./TicketSelection";
 import { useEffect, useState } from "react";
 import Setup from "./Setup";
 import CompanyDetailTabs from "./CompanyDetailTabs";
-import { CompanyTicket } from "../electron/lib/db-types";
+import { CompanyTicket } from "../electron/lib/dbTypes";
 
 function App() {
   const [firstRun, setFirstRun] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState <CompanyTicket|undefined> (undefined);
+  const [defaultTech, setDefaultTech] = useState('');
 
   const selectSearch = (v: CompanyTicket | undefined) => {
     setSelectedTicket(v);
@@ -22,6 +23,15 @@ function App() {
     getFirstRun();
   }, []);
 
+  useEffect( ()=> {
+      const getDefaultTech = async () => {
+      const {displayName} = await window.app.getCachedSettings();
+      setDefaultTech(displayName);
+    }
+    getDefaultTech();
+
+  },[selectedTicket])
+
   const firstLoadView = <>
     <Setup onComplete={() => setFirstRun(false)}/>
   </>
@@ -31,7 +41,7 @@ function App() {
     {selectedTicket && <>
       <Company company={selectedTicket?.company || ''}/>
       <CompanyDetailTabs companyTicket={selectedTicket} />
-      <TicketEntry ticket={selectedTicket}/>
+      <TicketEntry ticket={selectedTicket} defaultTech={defaultTech} />
     </>}
   </>
 

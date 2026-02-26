@@ -1,5 +1,6 @@
 import odbc from "odbc";
 import { RegistrySettings } from "./settings";
+import { decodeCompanyRows, decodeTicketRows, normalizeRows } from "./dbTypes";
 
 let conn: odbc.Connection | undefined = undefined;
 const connectionSettings = {
@@ -14,7 +15,7 @@ export function dbConnectionProperties(settings: RegistrySettings) {
 
 export async function connect() {
   if (!conn) {
-    console.log('Connecting to DB.')
+    console.log('Connecting to DB.');
     conn = await odbc.connect(`DSN=ChaseTrack;UID=${connectionSettings.user};PWD=${connectionSettings.pass}`);
   }
 }
@@ -51,8 +52,9 @@ export async function getOpenTickets() {
     SELECT *
     FROM Servtrack
     WHERE completed = 0
-  `);
-  return [...result];
+  `) as Record<string, unknown>[];
+  const normalizedResult = normalizeRows([...result]);
+  return decodeTicketRows(normalizedResult);
 }
 
 export async function findByPhone(phone: string) {
@@ -68,9 +70,9 @@ export async function findByPhone(phone: string) {
     FROM cust
     WHERE Phone LIKE '${phoneQuery}'
     LIMIT 7
-  `);
-
-  return [...result];
+  `) as Record<string, unknown>[];
+  const normalizedResult = normalizeRows([...result]);
+  return decodeCompanyRows(normalizedResult);
 }
 
 export async function findByCompanyName(company: string) {
@@ -82,9 +84,9 @@ export async function findByCompanyName(company: string) {
     FROM cust
     WHERE company LIKE '${companyQuery}'
     LIMIT 7
-  `);
-
-  return [...result];
+  `) as Record<string, unknown>[];
+  const normalizedResult = normalizeRows([...result]);
+  return decodeCompanyRows(normalizedResult);
 }
 
 export async function findCompany(query: string) {
@@ -101,8 +103,9 @@ export async function findLastTicketsByCompany(company: string) {
     WHERE company = "${company}"
     ORDER BY serviceid DESC
     LIMIT 6
-  `);
-  return [...result];
+  `) as Record<string, unknown>[];
+  const normalizedResult = normalizeRows([...result])
+  return decodeTicketRows(normalizedResult);
 }
 
 // async function run() {

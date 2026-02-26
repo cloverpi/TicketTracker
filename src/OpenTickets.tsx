@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { CompanyTicket } from "../electron/lib/db-types";
+import { CompanyTicket } from "../electron/lib/dbTypes";
+import { getDateString } from "./lib/helpers";
 
 interface Prop {
     onSelect: (v: CompanyTicket | undefined) => void
@@ -47,13 +48,13 @@ function OpenTickets({onSelect}:Prop) {
           </thead>
           <tbody>
             {
-              openTickets.map((t, i) => (
+              openTickets.map((t, i) => ( 
                 <tr key={t.serviceid} id={`${i}`} 
                 className={`table-row ${activeRow == i ? 'row-active' : ''} ${hoverRow == i ? 'row-hover' : ''}`}
                 onMouseEnter={()=>setHoverRow(i)}
                 onClick={()=>handleRowClick(i)}
                 >
-                  <td>{t.daterec?.toDateString()}</td>
+                  <td>{getDateString(t.daterec) ?? ''}</td>
                   <td className="text-truncate">{t.company}</td>
                   <td className="text-truncate">{t.problem}</td>
                 </tr>

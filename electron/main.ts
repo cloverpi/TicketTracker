@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain, Menu } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
-import { getSettings, setSettings } from './lib/settings'
+import { getCachedSettings, getSettings, setSettings } from './lib/settings'
 import { getCustomSearchFromFile, getPrefilledSearchDefault, getTeamviewerDevices, setPrefilledSearchDefault, teamviewerConnectionProperties } from './lib/teamviewer'
 
 
@@ -41,7 +41,7 @@ async function createWindow() {
       firstRun = true;
     }
     if (settings && settings.token) {
-      teamviewerConnectionProperties(settings)
+      teamviewerConnectionProperties(settings);
       await getTeamviewerDevices({ force: true });
       await getCustomSearchFromFile();
     }
@@ -100,13 +100,33 @@ ipcMain.handle("firstRun", () => {
   return firstRun;
 });
 
+ipcMain.handle("getCachedSettings", async (_event, _) => {
+  return getCachedSettings();
+});
+
 ipcMain.handle("updateSettings", async (_event, opts) => {
-  const { user, pass } = opts;
+  const { user, pass, displayName, teamviewerLocation } = opts;
   const connectionStatus = await testConnection(user, pass);
   if (!connectionStatus) return false;
-  setSettings(user, pass);
+  setSettings(user, pass, displayName, teamviewerLocation);
   firstRun = false;
+
+  const settings = await getSettings();
+  if (settings && settings.token) {
+    teamviewerConnectionProperties(settings);
+    await getTeamviewerDevices({ force: true });
+    await getCustomSearchFromFile();
+  }
   return true;
+});
+
+ipcMain.handle("selectTeamviewer", async (_event, _opts) => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ["openFile"],
+    filters: [{ name: "Application", extensions: ["exe"] }]
+  });
+  if (canceled) return;
+  return filePaths[0];
 });
 
 ipcMain.handle("findByPhone", async (_event, opts) => {
