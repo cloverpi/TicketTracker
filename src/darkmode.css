@@ -57,6 +57,10 @@
   --bs-success-text-emphasis-rgb: 154, 224, 196;
 }
 
+.dropdown-menu {
+  --bs-dropdown-link-hover-bg: rgba(var(--bs-success-text-emphasis-rgb), 0.5) !important
+}
+
 .accordion {
   --bs-accordion-active-color: var(--bs-body-bg);
   --bs-accordion-active-bg: rgba(var(--bs-success-text-emphasis-rgb), 0.75);
