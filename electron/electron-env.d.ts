@@ -42,6 +42,9 @@ interface Window {
     getCachedSettings: () => Promise<Record<'displayName' | 'teamviewerLocation', string>>,
     selectTeamviewer: () => Promise<string | undefined>,
     getPrefilledSearchDefault: (opts: { companyName: string }) => Promise<string>,
-    setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => () => void,
+    setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => void,
+    setTvPassword: (opts: { id: number, pass: string }) => void,
+    launchTeamviewer: (opts: { id: number }) => void
+    // getTvPassword: (opts: {id: number}) => Promise<string>   // <--- might not need
   }
 }

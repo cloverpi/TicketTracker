@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Logo from "./components/Logo";
 
 interface Props {
     onComplete: () => void;
@@ -44,9 +45,12 @@ function Setup( {onComplete}: Props ) {
     return (
         <div className="modal d-block" tabIndex={-1}>
             <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
+                <div className="modal-content border-0">
+                    <Logo allowAnimate={true}/>
+                    <br />
+                    <br />
                     <div className="modal-body">
-                        <h2>Enter your credentials</h2>
+                        <h6>Enter your credentials: </h6>
                         <div className="form-floating mb-2">
                             <input type="text" className={`form-control ${error ? 'is-invalid' : ''}`} id="user" placeholder="" onChange={handleUserChange} />
                             <label htmlFor="user">DB Username</label>

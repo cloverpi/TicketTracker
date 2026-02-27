@@ -2,6 +2,7 @@ import { app } from "electron";
 import fs from 'fs/promises';
 import path from "path";
 import WinReg from "winreg";
+import { AppData } from "./teamviewer";
 
 const appName = app.getName();
 const secretBuf = Buffer.from('EmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbisEmberIsBisemberisbisemberisbisemberisbis', 'utf-8');
@@ -11,7 +12,8 @@ export interface RegistrySettings {
     pass: string,
     token: string,
     displayName: string,
-    teamviewerLocation: string
+    teamviewerLocation: string,
+    teamviewerPass: string,
 }
 
 const programKey = new WinReg({
@@ -21,7 +23,8 @@ const programKey = new WinReg({
 
 const outputSettings = {
     displayName: '',
-    teamviewerLocation: ''
+    teamviewerLocation: '',
+    teamviewerPass: '',
 }
 
 const fileSettings = {
@@ -36,13 +39,13 @@ function XORStrings(buf: Buffer) {
     return buf.toString('base64');
 }
 
-function decodeString(b64String: string) {
+export function decodeString(b64String: string) {
     const buf = Buffer.from(b64String, 'base64');
     const realValueBuf = Buffer.from(XORStrings(buf), 'base64');
     return realValueBuf.toString('utf-8');
 }
 
-function encodeString(str: string) {
+export function encodeString(str: string) {
     return XORStrings(Buffer.from(str, 'utf-8'));
 }
 
@@ -63,9 +66,11 @@ export async function getSettings() {
 
     settings.pass = decodeString(settings.pass);
     settings.token = decodeString(settings.token);
+    settings.teamviewerPass = decodeString(settings.teamviewerPass);
 
     outputSettings.displayName = settings.displayName;
     outputSettings.teamviewerLocation = settings.teamviewerLocation;
+    outputSettings.teamviewerPass = settings.teamviewerPass;
 
     return settings;
 }
@@ -99,7 +104,7 @@ export async function setSettings(user: string, pass: string, displayName: strin
     outputSettings.teamviewerLocation = teamviewerLocation;
 }
 
-export async function saveAppDataSettings(data: Record<string, string>) {
+export async function saveAppDataSettings(data: AppData) {
     try {
         if (!data) return;
 

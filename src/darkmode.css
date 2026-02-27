@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Outfit';
+  src: url('/src/assets/font/Outfit-SemiBold.ttf') format('truetype');
+  /* font-weight: 600; */
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-size: 75%;
   /* height: 100%; */
@@ -122,4 +130,23 @@ tr.table-row>th {
   transform-origin: center;
   transform-box: fill-box;
   transform-origin: 50% 50%;
+}
+
+.spin-slow {
+  display: inline-block;
+  animation: spin 3s linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.greyscale {
+  filter: grayscale(100%);
+}
+
+.title {
+  font-family: 'Outfit';
+  font-size: 2.5rem !important;
+  font-weight: 400;
+  color: var(--bs-primary-text-emphasis);
 }

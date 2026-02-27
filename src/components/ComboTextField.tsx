@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 
 type ComboTextFieldProps = {
   id: string;
+  focus?: boolean;
+  tabIndex?: number;
   label: string;
   options: string[];
   value: string;
@@ -12,6 +14,8 @@ type ComboTextFieldProps = {
 
 function ComboTextField({
   id,
+  focus,
+  tabIndex,
   label,
   options,
   value,
@@ -84,7 +88,6 @@ useEffect(() => {
       if (open && activeIndex >= 0 && activeIndex < options.length) {
         pick(options[activeIndex]);
       }
-      console.log(activeIndex)
       if (open && activeIndex == -1){
         e.preventDefault();
         pick(options[0]);
@@ -106,6 +109,8 @@ useEffect(() => {
       style={widthPx ? { width: `${widthPx}px` } : undefined}
     >
       <input
+        autoFocus={focus}
+        // tabIndex={tabIndex}
         ref={inputRef}
         id={id}
         className="form-control pe-5"

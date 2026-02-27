@@ -30,6 +30,12 @@ function TicketEntry({ticket, defaultTech}:Prop) {
     })
   }
 
+  const handleDateUpdate = (field: string, element: React.ChangeEvent<HTMLInputElement>) => {
+    const value = element.target.value;
+    handleFieldUpdate(field, value);
+    // console.log(value);
+  }
+
   useEffect(()=> {
     setForm({
       ...ticket,
@@ -50,6 +56,7 @@ function TicketEntry({ticket, defaultTech}:Prop) {
   return <>
     <ComboTextField
       id="product"
+      tabIndex={50}
       label="Product"
       options={[
         "Store Manager",
@@ -149,6 +156,7 @@ function TicketEntry({ticket, defaultTech}:Prop) {
           id="dateReceived"
           placeholder=""
           value={form.daterec}
+          onChange={(t) => handleDateUpdate('daterec', t)}
         />
         <label htmlFor="dateReceived">Date Received</label>
         </div>
@@ -159,6 +167,7 @@ function TicketEntry({ticket, defaultTech}:Prop) {
             id="dateCompleted"
             placeholder=""
             value={form.datecomp}
+            onChange={(t) => handleDateUpdate('datecomp', t)}
           />
           <label htmlFor="dateCompleted">Date Completed</label>
         </div>

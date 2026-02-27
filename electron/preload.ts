@@ -69,4 +69,10 @@ contextBridge.exposeInMainWorld('app', {
   setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => {
     return ipcRenderer.invoke("setPrefilledSearchDefault", opts);
   },
+  setTvPassword: (opts: { id: number, pass: string }) => {
+    return ipcRenderer.invoke("setTvPassword", opts);
+  },
+  launchTeamviewer: (opts: { id: number }) => {
+    return ipcRenderer.invoke("launchTeamviewer", opts);
+  },
 });

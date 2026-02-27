@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
 import { getCachedSettings, getSettings, setSettings } from './lib/settings'
-import { getCustomSearchFromFile, getPrefilledSearchDefault, getTeamviewerDevices, setPrefilledSearchDefault, teamviewerConnectionProperties } from './lib/teamviewer'
+import { getCustomSearchFromFile, getPrefilledSearchDefault, getTeamviewerDevices, setPrefilledSearchDefault, setTvPassword, teamviewerConnectionProperties, launchTeamviewer } from './lib/teamviewer'
 
 
 
@@ -161,6 +161,10 @@ ipcMain.handle("setPrefilledSearchDefault", async (_event, opts) => {
   return await setPrefilledSearchDefault(opts);
 });
 
+ipcMain.handle("setTvPassword", async (_event, opts) => {
+  return await setTvPassword(opts);
+});
 
-
-
+ipcMain.handle("launchTeamviewer", async (_event, opts) => {
+  return await launchTeamviewer(opts);
+});

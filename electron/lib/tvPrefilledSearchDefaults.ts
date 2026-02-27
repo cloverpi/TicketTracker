@@ -1,6 +1,6 @@
-export type searchMap = Record<string, string>
+export type SearchMap = Record<string, string>
 
-export const defaultSearch: searchMap = {
+export const defaultSearch: SearchMap = {
     "376 LIQUOR": "376 Liquor -",
     "AHTAHKAKOOP GENERAL STORE": "Ahtahkakoop General Store",
     "ANN'S C-STORE": "Ann's C Store",

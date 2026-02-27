@@ -6,15 +6,32 @@ interface Prop {
 }
 
 function CompanyTeamviewer({devices}:Prop) {
-  // const [teamviewers, setTeamviewers] = useState(devices || []);
   const [editingRow, setEditingRow] = useState(-1);
   const [password, setPassword] = useState('');
+  const [searchTimer, setSearchTimer] = useState<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [activeRow, setActiveRow] = useState(-1);
   const [hoverRow, setHoverRow] = useState(-1);
 
+  const timeout = 750;
 
   const handleRowClick = (index: number) => {
     setActiveRow(index);
+  }
+
+  const tvStationClick = (index: number) => {
+    const id = devices[index].teamviewer_id
+    window.app.launchTeamviewer({id});
+  }
+
+  const handlePasswordChange = (v: string) => {
+    clearTimeout(searchTimer);
+    setPassword(v);
+    const activeId = devices[activeRow].teamviewer_id
+    setSearchTimer(setTimeout(async () => {
+        await window.app.setTvPassword({id: activeId, pass: v})
+        console.log(devices[activeRow]);
+        clearTimeout(searchTimer);
+    }, timeout));
   }
 
   useEffect( () => {
@@ -38,7 +55,7 @@ function CompanyTeamviewer({devices}:Prop) {
                 <th scope="col" className="status-cell" style={{ width: "30px" }}>
                     <span className="status header-status" />
                 </th>
-                <th scope="col" style={{ width: "300px" }}>
+                <th scope="col" style={{ width: "380px" }}>
                     Teamviewer Station
                 </th>
                 <th scope="col">Controls</th>
@@ -53,7 +70,7 @@ function CompanyTeamviewer({devices}:Prop) {
                 onClick={()=>handleRowClick(i)}
                 >
                     <td className="status-cell"><span className={`status ${t.online_state == 'Online' ? 'bg-success' : 'bg-danger'}`} /></td>
-                    <td className="text-truncate">{t.alias}</td>
+                    <td className="text-truncate" onClick={()=>tvStationClick(i)}>{t.alias}</td>
                     <td>
                         {editingRow === i ? (
                             <input
@@ -61,7 +78,7 @@ function CompanyTeamviewer({devices}:Prop) {
                             className="form-control password-inline"
                             autoFocus
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => handlePasswordChange(e.target.value)}
                             onBlur={() => setEditingRow(-1)}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") {

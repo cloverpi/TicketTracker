@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Setup from "./Setup";
 import CompanyDetailTabs from "./CompanyDetailTabs";
 import { CompanyTicket } from "../electron/lib/dbTypes";
+import HintBox from "./components/HintBox";
 
 function App() {
   const [firstRun, setFirstRun] = useState(true);
@@ -38,11 +39,15 @@ function App() {
 
   const mainView = <>
     <TicketSelection onSelect={selectSearch} />
-    {selectedTicket && <>
+    {selectedTicket && 
+    <>
       <Company company={selectedTicket?.company || ''}/>
       <CompanyDetailTabs companyTicket={selectedTicket} />
       <TicketEntry ticket={selectedTicket} defaultTech={defaultTech} />
     </>}
+      {!selectedTicket &&
+      <HintBox opacity={50} text={'Create or open a ticket to begin'} />
+    }
   </>
 
   return (
