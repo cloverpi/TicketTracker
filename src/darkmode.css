@@ -146,7 +146,8 @@ tr.table-row>th {
 
 .title {
   font-family: 'Outfit';
-  font-size: 2.5rem !important;
+  font-size: 2rem;
   font-weight: 400;
   color: var(--bs-primary-text-emphasis);
+  user-select: none;
 }

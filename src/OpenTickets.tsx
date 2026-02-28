@@ -27,7 +27,7 @@ function OpenTickets({onSelect}:Prop) {
   return (
     <>
       <div
-        className="border rounded-4 shadow-sm overflow-auto mb-4"
+        className="border rounded-4 shadow-sm overflow-auto mb-3"
         style={{ height: "126px" }}
       >
         <table

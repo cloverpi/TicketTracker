@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { tvDevice } from "../electron/lib/teamviewer";
+import Popover from "./components/Popover";
 
 interface Prop {
   devices: tvDevice[]
@@ -87,11 +88,11 @@ function CompanyTeamviewer({devices}:Prop) {
                             }}
                             />
                         ) : (
+                          <Popover content={"Change password if different from standard"}>
                             <span
                                 className="icon"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
-                                title="Change password if different from standard"
                                 onClick={() => {
                                     setEditingRow(i);
                                     setPassword("");
@@ -114,6 +115,7 @@ function CompanyTeamviewer({devices}:Prop) {
                                 <path d="M19 19l2-2" />
                             </svg>
                             </span>
+                            </Popover>
                         )}
                         </td>
                 </tr>

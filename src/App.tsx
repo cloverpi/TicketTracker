@@ -25,6 +25,7 @@ function App() {
   }, []);
 
   useEffect( ()=> {
+      // console.log(selectedTicket)
       const getDefaultTech = async () => {
       const {displayName} = await window.app.getCachedSettings();
       setDefaultTech(displayName);
@@ -41,7 +42,7 @@ function App() {
     <TicketSelection onSelect={selectSearch} />
     {selectedTicket && 
     <>
-      <Company company={selectedTicket?.company || ''}/>
+      <Company companyTicket={selectedTicket}/>
       <CompanyDetailTabs companyTicket={selectedTicket} />
       <TicketEntry ticket={selectedTicket} defaultTech={defaultTech} />
     </>}

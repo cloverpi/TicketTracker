@@ -1,5 +1,10 @@
 import { tvDevice } from "../../electron/lib/teamviewer"
 
+export function titleCase(s: string | undefined) {
+  if (!s) return '';
+  return s.toLowerCase().replace(/\b[\p{L}\p{N}]/gu, (c) => c.toUpperCase());
+}
+
 export function getDateString(date: Date | undefined): string | undefined {
   if (!date) return;
   return date.toLocaleDateString('en-CA', { timeZone: 'UTC' })
