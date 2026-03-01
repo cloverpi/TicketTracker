@@ -1,6 +1,6 @@
 import odbc from "odbc";
 import { RegistrySettings } from "./settings";
-import { decodeCompanyRows, decodeTicketRows, normalizeRows } from "./dbTypes";
+import { CompanyTicket, decodeCompanyRows, decodeTicketRows, normalizeRows } from "./dbTypes";
 
 let conn: odbc.Connection | undefined = undefined;
 const connectionSettings = {
@@ -30,6 +30,11 @@ export async function testConnection(user: string, pass: string) {
     FROM System
     `);
   return res.length > 0;
+}
+
+export function sqlEscape(value: unknown): string {
+  if (value === null || value === undefined) return "NULL";
+  return String(value).replace(/'/g, "''");
 }
 
 async function sendQuery(q: string) {
@@ -63,7 +68,7 @@ export async function findByPhone(phone: string) {
   const noDigits = phone.replace(/\d/g, "");
   if (noDigits.length >= digits.length) return [];
 
-  const phoneQuery = `%${digits.slice(0, 3)}%${digits.slice(3, 6)}%${digits.slice(6)}%`;
+  const phoneQuery = sqlEscape(`%${digits.slice(0, 3)}%${digits.slice(3, 6)}%${digits.slice(6)}%`);
 
   const result = await sendQuery(`
     SELECT *
@@ -77,7 +82,7 @@ export async function findByPhone(phone: string) {
 
 export async function findByCompanyName(company: string) {
 
-  const companyQuery = `%${company.replaceAll(' ', '%').toUpperCase()}%`
+  const companyQuery = sqlEscape(`%${company.replaceAll(' ', '%').toUpperCase()}%`)
 
   const result = await sendQuery(`
     SELECT *
@@ -100,12 +105,48 @@ export async function findLastTicketsByCompany(company: string) {
   const result = await sendQuery(`
     SELECT *
     FROM servtrack
-    WHERE company = "${company}"
+    WHERE company = "${sqlEscape(company)}"
     ORDER BY serviceid DESC
     LIMIT 6
   `) as Record<string, unknown>[];
   const normalizedResult = normalizeRows([...result])
   return decodeTicketRows(normalizedResult);
+}
+
+async function getLastTicketNumber(company: string) {
+    const [result] = await sendQuery(`
+      SELECT serviceid
+      FROM servtrack
+      WHERE company = "${company}"
+      ORDER BY serviceid DESC
+      LIMIT 1
+    `) as Record<string, string>[];
+    console.log(result);
+    return result.serviceid;
+}
+
+export async function updateCompanyTicket(oldCompanyTicket: CompanyTicket, newCompanyTicket: CompanyTicket) {
+  if (!newCompanyTicket.serviceid) {
+    let serviceid = await getLastTicketNumber(newCompanyTicket.company);
+    if (!serviceid) return;
+    serviceid = ( +serviceid + 1 ).toString()
+    newCompanyTicket = {...newCompanyTicket, serviceid}
+    //insert new row
+    //update system table row.
+  } else {
+    //update serviceid row.
+  }
+
+  if ( oldCompanyTicket.phone != newCompanyTicket.phone || 
+       oldCompanyTicket.email != newCompanyTicket.email ||
+       oldCompanyTicket.contact != newCompanyTicket.contact 
+   ) {
+     //update Company table.
+   }
+
+  // find if new ticket or existing.
+  // if new, get new serviceid and add it to newTicket and update the system table.
+  // find if contact, phone, or email have changed and update those fields.
 }
 
 // async function run() {

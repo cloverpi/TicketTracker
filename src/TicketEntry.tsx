@@ -6,21 +6,25 @@ import { getDateString } from "./lib/helpers";
 interface Prop {
   ticket: CompanyTicket;
   defaultTech?: string;
+  onComplete: () => void;
 }
 
-function TicketEntry({ticket, defaultTech}:Prop) {
+function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
   const [form, setForm] = useState({
     product: '',
     model: '',
-    serial: '',
+    serialnum: '',
     email: '',
     contact: '',
     phone: '',
     calltype: '',
     branch: '',
     tech: '',
+    problem: '',
+    solution: '',
     daterec: '',
     datecomp: '',
+    minutes: 0,
   })
 
   const handleFieldUpdate = (field: string, value: string) => {
@@ -33,7 +37,11 @@ function TicketEntry({ticket, defaultTech}:Prop) {
   const handleDateUpdate = (field: string, element: React.ChangeEvent<HTMLInputElement>) => {
     const value = element.target.value;
     handleFieldUpdate(field, value);
-    // console.log(value);
+  }
+
+  const onSubmit = () =>{
+    console.log(form);
+    onComplete();
   }
 
   useEffect(()=> {
@@ -41,15 +49,18 @@ function TicketEntry({ticket, defaultTech}:Prop) {
       ...ticket,
       product: ticket.product ?? '',
       model: ticket.model ?? '',
-      serial: ticket.serialnum ?? '',
+      serialnum: ticket.serialnum ?? '',
       email: ticket.email ?? '',
       contact: ticket.contact ?? '',
       phone: ticket.phone ?? '',
       calltype: ticket.calltype ?? '',
-      branch: ticket.branch ?? '',
+      branch: ticket.branch ?? ticket.defbranch ?? '',
       tech: ticket.tech ?? defaultTech ?? '',
+      problem: ticket.problem ?? '',
+      solution: ticket.solution ?? '',
       daterec: getDateString(ticket.daterec) ?? getDateString(new Date()) ?? '',
       datecomp: getDateString(ticket.datecomp) ?? '',
+      minutes: ticket.minutes ?? 0,
     });
   }, [ticket, defaultTech]);
 
@@ -76,14 +87,28 @@ function TicketEntry({ticket, defaultTech}:Prop) {
     <div className="row g-4">
       <div className="col-6">
         <div className="form-floating mb-2">
-          <input type="text" className="form-control" id="model" placeholder="" />
+          <input
+            type="text"
+            className="form-control"
+            id="model"
+            placeholder="" 
+            value={form.model}
+            onChange={(element) => handleFieldUpdate('model', element.target.value)}
+            />
           <label htmlFor="model">Model</label>
         </div>
       </div>
       <div className="col-6">
         <div className="form-floating mb-2">
-          <input type="text" className="form-control" id="serial" placeholder="" />
-          <label htmlFor="serial">Serial</label>
+          <input 
+            type="text" 
+            className="form-control" 
+            id="serial" 
+            placeholder=""
+            value={form.serialnum}
+            onChange={(element) => handleFieldUpdate('serial', element.target.value)}
+            />
+          <label htmlFor="serialnum">Serial</label>
         </div>
       </div>
     </div>
@@ -91,21 +116,41 @@ function TicketEntry({ticket, defaultTech}:Prop) {
     <div className="row g-4">
       <div className="col-6">    
         <div className="form-floating mb-2">
-          <input type="text" className="form-control" id="contact" placeholder="" />
+          <input 
+            type="text" 
+            className="form-control" 
+            id="contact" 
+            placeholder="" 
+            value={form.contact}
+            onChange={(element) => handleFieldUpdate('contact', element.target.value)}
+            />
           <label htmlFor="contact">Contact Name</label>
         </div>
 
         <div className="form-floating mb-2">
-          <input type="email" className="form-control" id="email" placeholder="" />
+          <input 
+            type="email" 
+            className="form-control" 
+            id="email" 
+            placeholder=""
+            value={form.email}
+            onChange={(element) => handleFieldUpdate('email', element.target.value)}
+            />
           <label htmlFor="email">Email</label>
         </div>
       </div>
 
-    {/* RIGHT SIDE */}
-    <div className="col-6">
-      
+
+    <div className="col-6">  
       <div className="form-floating mb-2">
-        <input type="text" className="form-control" id="phone" placeholder="" />
+        <input 
+          type="text" 
+          className="form-control" 
+          id="phone" 
+          placeholder="" 
+          value={form.phone}
+          onChange={(element) => handleFieldUpdate('phone', element.target.value)}
+        />
         <label htmlFor="phone">Phone Number</label>
       </div>
       <ComboTextField
@@ -140,11 +185,24 @@ function TicketEntry({ticket, defaultTech}:Prop) {
       </div>
     </div>
     <div className="form-floating mb-2">
-        <input type="text" className="form-control" id="issue" placeholder=""/>
+        <input 
+          type="text" 
+          className="form-control" 
+          id="issue" 
+          placeholder=""
+          value={form.problem}
+          onChange={(element) => handleFieldUpdate('problem', element.target.value)}
+        />
         <label htmlFor="issue">Issue</label>
     </div>
     <div className="form-floating mb-2">
-        <textarea className="form-control" id="solution" placeholder="" style={{height: "110px", resize: "none"}}/>
+        <textarea 
+          className="form-control" 
+          id="solution" placeholder="" 
+          style={{height: "110px", resize: "none"}}
+          value={form.solution}
+          onChange={(element) => handleFieldUpdate('solution', element.target.value)}
+          />
         <label htmlFor="solution">Solution</label>
     </div>
     <div className="row">
@@ -174,12 +232,19 @@ function TicketEntry({ticket, defaultTech}:Prop) {
       </div>
       <div className="col-4 d-flex flex-column justify-content-end">
         <div className="form-floating mb-2">
-          <input type="text" className="form-control" id="billTime" placeholder="" />
+          <input
+            type="number"
+            className="form-control"
+            id="billTime"
+            placeholder="" 
+            value={form.minutes}
+            onChange={(element) => handleFieldUpdate('minutes', element.target.value)}
+            />
           <label htmlFor="billTime">Minutes Billed</label>
         </div>
       </div>
       <div className="col-4  mb-2 d-flex flex-column justify-content-end">
-        <button type="button" className="btn btn-primary" style={{width: '100%', height: '50%'}}>Submit</button>
+        <button type="button" className="btn btn-primary" onClick={onSubmit} style={{width: '100%', height: '50%'}}>Submit</button>
       </div>
 
     </div>

@@ -25,7 +25,6 @@ function App() {
   }, []);
 
   useEffect( ()=> {
-      // console.log(selectedTicket)
       const getDefaultTech = async () => {
       const {displayName} = await window.app.getCachedSettings();
       setDefaultTech(displayName);
@@ -33,6 +32,10 @@ function App() {
     getDefaultTech();
 
   },[selectedTicket])
+
+  const ticketComplete = () => {
+    setSelectedTicket(undefined);
+  }
 
   const firstLoadView = <>
     <Setup onComplete={() => setFirstRun(false)}/>
@@ -44,7 +47,7 @@ function App() {
     <>
       <Company companyTicket={selectedTicket}/>
       <CompanyDetailTabs companyTicket={selectedTicket} />
-      <TicketEntry ticket={selectedTicket} defaultTech={defaultTech} />
+      <TicketEntry ticket={selectedTicket} defaultTech={defaultTech} onComplete={ticketComplete} />
     </>}
       {!selectedTicket &&
       <HintBox opacity={50} text={'Create or open a ticket to begin'} />

@@ -2,7 +2,7 @@ import { CompanyTicket } from "../electron/lib/dbTypes"
 import Popover from "./components/Popover";
 import StopIcon from "./icon/StopIcon";
 import WarningIcon from "./icon/WarningIcon";
-import { titleCase } from "./lib/helpers";
+import { getDateString, titleCase } from "./lib/helpers";
 
 interface Props {
   companyTicket: CompanyTicket
@@ -28,13 +28,20 @@ function Company({companyTicket}: Props) {
       </div>
   </>
 
+  const expiries = [
+    companyTicket.hardware && `Hardware expiry:  ${getDateString(companyTicket.hrdwexpiry)}`,
+    companyTicket.software && `Software expiry: ${getDateString(companyTicket.sftwexpiry)}`,
+    companyTicket.rmactive && `RMac expiry: ${getDateString(companyTicket.rmacexpiry)}`,
+  ].filter(Boolean)
+
   const infoTooltip = 
   <>
     <strong>{companyTicket.company}</strong> <br />
     {titleCase(companyTicket.addr1)}<br />
     {titleCase(companyTicket.addr2)}<br />
     {titleCase(companyTicket.city)}<br />
-    {titleCase(companyTicket.contact)} {companyTicket.phone}
+    {titleCase(companyTicket.contact)} {companyTicket.phone} <br />
+    {expiries.map((expiry, i) => <div key={i}>{expiry}</div>)}
   </>
 
   return (

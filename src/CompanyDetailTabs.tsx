@@ -4,6 +4,7 @@ import CompanyTeamviewer from './CompanyTeamviewer';
 import { findMatches } from './lib/helpers';
 import { tvDevice } from '../electron/lib/teamviewer';
 import { CompanyTicket } from '../electron/lib/dbTypes';
+import Popover from './components/Popover';
 
 interface Prop {
     companyTicket: CompanyTicket;
@@ -26,7 +27,6 @@ function CompanyDetailTabs( {companyTicket} : Prop ) {
 
     const getTeamviewers =  useCallback(async (force: boolean) => {
         const devices = await window.api.getTeamviewerDevices({force}) as tvDevice[];
-        console.log(devices);
         setLoading(false);
         setTeamviewers(devices);
     }, [companyTicket]);
@@ -80,6 +80,32 @@ function CompanyDetailTabs( {companyTicket} : Prop ) {
         setActiveTab(tabId);
     };
 
+      const searchOptionsTooltip = 
+        <>
+            <table className="table table-striped border mb-0"> 
+                <thead>
+                    <tr>
+                        <th style={{width: '40px'}}></th>
+                        <th>Description</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style={{textAlign: 'center'}}>+</td>
+                        <td>Word must be present.</td>
+                    </tr>
+                    <tr>
+                        <td style={{textAlign: 'center'}}>!</td>
+                        <td>Word must <b>NOT</b> be present.</td>
+                    </tr>
+                    <tr>
+                        <td style={{textAlign: 'center'}}>|</td>
+                        <td>Word can be either word1 <b>OR</b> word2. eg: word1|word2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </>
+
     return (
         <>
         <div className="d-flex align-items-center mb-2">
@@ -98,36 +124,37 @@ function CompanyDetailTabs( {companyTicket} : Prop ) {
             
             { activeTab == 'teamviewer' &&
             <>
-                <input
-                type="text"
-                className="form-control "
-                style={{ width: "200px" }}
-                placeholder="Search"
-                value={searchFilter}
-                onChange={(e) => handleFilterChange(e.target.value)}
-                />
-
-                <button
-                className="btn"
-                onClick={handleReload}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.6667"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={`icon icon-tabler icons-tabler-outline icon-tabler-reload ${loading ? 'spin' : ''}`}
-                        >
-                        <path stroke="none" d="M0 0h20v20H0z" fill="none" />
-                        <path d="M16.611 10.867a6.667 6.667 0 1 1 -8.271 -7.324c3.249 -.833 6.613 .839 7.854 3.956" />
-                        <path d="M16.667 3.333v4.167h-4.167" />
-                    </svg>
-                </button>
+                <Popover content={searchOptionsTooltip}>
+                    <input
+                    type="text"
+                    className="form-control "
+                    style={{ width: "200px" }}
+                    placeholder="Search"
+                    value={searchFilter}
+                    onChange={(e) => handleFilterChange(e.target.value)}
+                    />
+                </Popover>
+                    <button
+                    className="btn"
+                    onClick={handleReload}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6667"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={`icon icon-tabler icons-tabler-outline icon-tabler-reload ${loading ? 'spin' : ''}`}
+                            >
+                            <path stroke="none" d="M0 0h20v20H0z" fill="none" />
+                            <path d="M16.611 10.867a6.667 6.667 0 1 1 -8.271 -7.324c3.249 -.833 6.613 .839 7.854 3.956" />
+                            <path d="M16.667 3.333v4.167h-4.167" />
+                        </svg>
+                    </button>
             </>} 
         </div>
         {tabContent[activeTab]}

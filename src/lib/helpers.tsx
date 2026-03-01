@@ -5,9 +5,9 @@ export function titleCase(s: string | undefined) {
   return s.toLowerCase().replace(/\b[\p{L}\p{N}]/gu, (c) => c.toUpperCase());
 }
 
-export function getDateString(date: Date | undefined): string | undefined {
+export function getDateString(date: Date | undefined, tz = { timeZone: 'UTC' } ): string | undefined {
   if (!date) return;
-  return date.toLocaleDateString('en-CA', { timeZone: 'UTC' })
+  return date.toLocaleDateString('en-CA', tz)
 }
 
 function normalize(str: string) {

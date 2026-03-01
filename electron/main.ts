@@ -52,7 +52,7 @@ async function createWindow() {
 
   Menu.setApplicationMenu(null);
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'lifering.svg'),
+    icon: path.join(process.env.VITE_PUBLIC, 'icon.png'),
     height: 1080,
     width: 600,
     // frame: false,
