@@ -5,9 +5,33 @@ export function titleCase(s: string | undefined) {
   return s.toLowerCase().replace(/\b[\p{L}\p{N}]/gu, (c) => c.toUpperCase());
 }
 
-export function getDateString(date: Date | undefined, tz = { timeZone: 'UTC' } ): string | undefined {
+export function getDateFromDateString(date: string | number | Date): Date | undefined {
   if (!date) return;
-  return date.toLocaleDateString('en-CA', tz)
+  if (date instanceof Date) return date;
+  if (typeof date == "string" ) {
+      const dateParts = date.split('-');
+      const monthIndex = 1;
+      const yearIndex = dateParts[0].length == 4 ? 0 : 2;
+      const dayIndex = yearIndex == 0 ? 2 : 0;
+
+      const d = new Date( +dateParts[yearIndex], +dateParts[monthIndex] - 1,  +dateParts[dayIndex] );
+      if (!isNaN(d.getTime())) return d;
+  }
+  if (typeof date == "number"){
+      const d = new Date(date);
+      if (!isNaN(d.getTime())) return d;
+  }
+}
+
+export function getDateString(date: Date | undefined, timeZone = "UTC"): string | undefined {
+  if (!date) return;
+
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
 }
 
 function normalize(str: string) {

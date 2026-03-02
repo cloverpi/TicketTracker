@@ -43,6 +43,51 @@ export type Ticket = {
 
 export type CompanyTicket = Company & Ticket;
 
+export type CompanyDBInsert = {
+    id?: string,
+    company: string,
+    city?: string,
+    addr1?: string,
+    addr2?: string,
+    contact?: string,
+    phone?: string,
+    email?: string,
+    defbranch?: string,
+    hardware: string,
+    hrdwexpiry?: string,
+    software: string,
+    sftwexpiry?: string,
+    rmactive: string,
+    rmacexpiry?: string,
+    cod?: string,
+    codreason?: string,
+    subscript?: string,
+}
+
+export type TicketDBInsert = {
+    serviceid?: string,
+    company: string,
+    product?: string,
+    model?: string,
+    serialnum?: string,
+    daterec?: string,
+    datecomp?: string,
+    cod?: string,
+    priority?: string,
+    completed?: string,
+    tech?: string,
+    calltype?: string,
+    branch?: string,
+    problem?: string,
+    solution?: string,
+    software?: string,
+    hardware?: string,
+    rmmonitor?: string,
+    minutes?: string,
+}
+
+export type CompanyTicketDBInsert = CompanyDBInsert & TicketDBInsert;
+
 export function asString(v: unknown): string | undefined {
     if (typeof v == "string" && v.trim() != "") return v;
 }
@@ -61,7 +106,16 @@ export function asBoolean(v: unknown): boolean {
 
 export function asDate(v: unknown): Date | undefined {
     if (v instanceof Date) return v
-    if (typeof v == "string" || typeof v == "number") {
+    if (typeof v == "string" ) {
+        const dateParts = v.split('-');
+        const monthIndex = 1;
+        const yearIndex = dateParts[0].length == 4 ? 0 : 2;
+        const dayIndex = yearIndex == 0 ? 2 : 0;
+
+         const d = new Date( +dateParts[yearIndex], +dateParts[monthIndex] - 1,  +dateParts[dayIndex] );
+         if (!isNaN(d.getTime())) return d;
+    }
+    if (typeof v == "number"){
         const d = new Date(v);
         if (!isNaN(d.getTime())) return d;
     }
@@ -127,6 +181,10 @@ export function decodeCompanyRows<T extends Record<string, unknown>>(rows: T[]) 
 
 export function decodeTicketRows<T extends Record<string, unknown>>(rows: T[]) {
     return rows.map(r => decodeTicket(r));
+}
+
+export function decodeCompanyTicketRows<T extends Record<string, unknown>>(rows: T[]) {
+    return rows.map(r => decodeCompanyTicket(r));
 }
 
 export function normalizeKeys<T extends Record<string, unknown>>(row: T) {

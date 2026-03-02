@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ComboTextField from "./components/ComboTextField";
 import { CompanyTicket } from "../electron/lib/dbTypes";
-import { getDateString } from "./lib/helpers";
+import { getDateFromDateString, getDateString } from "./lib/helpers";
 
 interface Prop {
   ticket: CompanyTicket;
@@ -39,12 +39,19 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
     handleFieldUpdate(field, value);
   }
 
-  const onSubmit = () =>{
-    console.log(form);
-    onComplete();
+  const onSubmit = async () =>{
+    // console.log(form);
+    const daterec = getDateFromDateString(form.daterec);
+    const datecomp = getDateFromDateString(form.datecomp);
+    const correctedForm = {...form, daterec, datecomp};
+    console.log(correctedForm);
+    const result = await window.api.updateCompanyTicket({oldCompany: ticket, newCompany: correctedForm})
+    console.log(result);
+    if (result) onComplete();
   }
 
   useEffect(()=> {
+    console.log(ticket);
     setForm({
       ...ticket,
       product: ticket.product ?? '',
@@ -58,7 +65,7 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
       tech: ticket.tech ?? defaultTech ?? '',
       problem: ticket.problem ?? '',
       solution: ticket.solution ?? '',
-      daterec: getDateString(ticket.daterec) ?? getDateString(new Date()) ?? '',
+      daterec: getDateString(ticket.daterec) ?? getDateString(new Date(), 'America/Regina') ?? '',
       datecomp: getDateString(ticket.datecomp) ?? '',
       minutes: ticket.minutes ?? 0,
     });
@@ -103,10 +110,10 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
           <input 
             type="text" 
             className="form-control" 
-            id="serial" 
+            id="serialnum" 
             placeholder=""
             value={form.serialnum}
-            onChange={(element) => handleFieldUpdate('serial', element.target.value)}
+            onChange={(element) => handleFieldUpdate('serialnum', element.target.value)}
             />
           <label htmlFor="serialnum">Serial</label>
         </div>
@@ -209,6 +216,7 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
       <div className="col-4">
         <div className="form-floating mb-2">
         <input
+          maxLength={500}
           type="date"
           className="form-control"
           id="dateReceived"

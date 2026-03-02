@@ -1,4 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import { CompanyTicket } from './lib/dbTypes'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -40,11 +41,15 @@ contextBridge.exposeInMainWorld('api', {
   findLastTicketsByCompany: (opts: { company: string }) => {
     return ipcRenderer.invoke("findLastTicketsByCompany", opts);
   },
+  updateCompanyTicket: (opts: {oldCompany: CompanyTicket, newCompany: CompanyTicket}) => {
+    return ipcRenderer.invoke("updateCompanyTicket", opts)
+  },
 
   //other
   getTeamviewerDevices: (opts?: { force: boolean }) => {
     return ipcRenderer.invoke("getTeamviewerDevices", opts);
   },
+
 
 
 });

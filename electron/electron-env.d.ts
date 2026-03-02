@@ -32,6 +32,7 @@ interface Window {
     findCompany: (opts: { query: string }) => Promise<[]>,
     getOpenTickets: () => Promise<[]>,
     findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>,
+    updateCompanyTicket: (opts: {oldCompany: unknown, newCompany: unknown}) => Promise<boolean>
 
     //other
     getTeamviewerDevices: (opts?: { force: boolean }) => Promise<[]>

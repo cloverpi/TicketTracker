@@ -14,7 +14,7 @@ function Company({companyTicket}: Props) {
   
   const warningTooltip = 
   <>
-      <strong><WarningIcon className="text-warning align-top" width={18} height={18}/>Warning</strong>
+      <strong><WarningIcon className="text-warning align-top" width={18} height={18}/>No support</strong>
       <div>
         This client has no support. Please collect payment before proceeding.
       </div>

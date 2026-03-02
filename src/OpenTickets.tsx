@@ -17,7 +17,7 @@ function OpenTickets({onSelect}:Prop) {
       setOpenTickets(res);
     }
     getTickets();
-  }, []);
+  }, [onSelect]);
 
   const handleRowClick = (index: number) => {
     onSelect(openTickets[index]);

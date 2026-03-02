@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, Menu } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection } from './lib/db'
+import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection, updateCompanyTicket } from './lib/db'
 import { getCachedSettings, getSettings, setSettings } from './lib/settings'
 import { getCustomSearchFromFile, getPrefilledSearchDefault, getTeamviewerDevices, setPrefilledSearchDefault, setTvPassword, teamviewerConnectionProperties, launchTeamviewer } from './lib/teamviewer'
 
@@ -147,6 +147,10 @@ ipcMain.handle("findLastTicketsByCompany", async (_event, opts) => {
 
 ipcMain.handle("getOpenTickets", async () => {
   return await getOpenTickets();
+});
+
+ipcMain.handle("updateCompanyTicket", async (_event, opts) => {
+  return await updateCompanyTicket(opts.oldCompany, opts.newCompany);
 });
 
 ipcMain.handle("getTeamviewerDevices", async (_event, opts) => {
