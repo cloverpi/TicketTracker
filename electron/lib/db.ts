@@ -165,7 +165,7 @@ export async function findLastTicketsByCompany(company: string) {
 
 async function getLastTicketNumber() {
   const [result] = await sendQuery(`
-      SELECT TOP 1serviceid
+      SELECT TOP 1 serviceid
       FROM servtrack
       ORDER BY serviceid DESC
     `) as Record<string, string>[];
