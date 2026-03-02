@@ -30,7 +30,7 @@ function SearchBar({onSelect}:Prop) {
     }, timeout));
   }
 
-  const selectSearchEntry = async (selection: any) => {
+  const selectSearchEntry = async (selection: CompanyTicket) => {
     setMatches([]);
     setSearch('');
     onSelect(selection);

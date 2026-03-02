@@ -41,7 +41,7 @@ contextBridge.exposeInMainWorld('api', {
   findLastTicketsByCompany: (opts: { company: string }) => {
     return ipcRenderer.invoke("findLastTicketsByCompany", opts);
   },
-  updateCompanyTicket: (opts: {oldCompany: CompanyTicket, newCompany: CompanyTicket}) => {
+  updateCompanyTicket: (opts: { oldCompany: CompanyTicket, newCompany: CompanyTicket }) => {
     return ipcRenderer.invoke("updateCompanyTicket", opts)
   },
 
@@ -80,4 +80,8 @@ contextBridge.exposeInMainWorld('app', {
   launchTeamviewer: (opts: { id: number }) => {
     return ipcRenderer.invoke("launchTeamviewer", opts);
   },
+});
+
+contextBridge.exposeInMainWorld("electronAPI", {
+  closeSidebar: () => ipcRenderer.send("sidebar-close")
 });

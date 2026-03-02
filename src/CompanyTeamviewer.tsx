@@ -30,7 +30,6 @@ function CompanyTeamviewer({devices}:Prop) {
     const activeId = devices[activeRow].teamviewer_id
     setSearchTimer(setTimeout(async () => {
         await window.app.setTvPassword({id: activeId, pass: v})
-        console.log(devices[activeRow]);
         clearTimeout(searchTimer);
     }, timeout));
   }

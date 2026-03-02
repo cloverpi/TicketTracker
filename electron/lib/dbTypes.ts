@@ -89,7 +89,7 @@ export type TicketDBInsert = {
 export type CompanyTicketDBInsert = CompanyDBInsert & TicketDBInsert;
 
 export function asString(v: unknown): string | undefined {
-    if (typeof v == "string" && v.trim() != "") return v;
+    if (typeof v == "string" && v.trim() != "") return v.trim();
 }
 
 export function asNumber(v: unknown): number | undefined {
@@ -106,16 +106,16 @@ export function asBoolean(v: unknown): boolean {
 
 export function asDate(v: unknown): Date | undefined {
     if (v instanceof Date) return v
-    if (typeof v == "string" ) {
+    if (typeof v == "string") {
         const dateParts = v.split('-');
         const monthIndex = 1;
         const yearIndex = dateParts[0].length == 4 ? 0 : 2;
         const dayIndex = yearIndex == 0 ? 2 : 0;
 
-         const d = new Date( +dateParts[yearIndex], +dateParts[monthIndex] - 1,  +dateParts[dayIndex] );
-         if (!isNaN(d.getTime())) return d;
+        const d = new Date(+dateParts[yearIndex], +dateParts[monthIndex] - 1, +dateParts[dayIndex]);
+        if (!isNaN(d.getTime())) return d;
     }
-    if (typeof v == "number"){
+    if (typeof v == "number") {
         const d = new Date(v);
         if (!isNaN(d.getTime())) return d;
     }

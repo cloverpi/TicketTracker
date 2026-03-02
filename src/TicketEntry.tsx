@@ -41,17 +41,16 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
 
   const onSubmit = async () =>{
     // console.log(form);
+    const minutes = +form.minutes
     const daterec = getDateFromDateString(form.daterec);
     const datecomp = getDateFromDateString(form.datecomp);
-    const correctedForm = {...form, daterec, datecomp};
-    console.log(correctedForm);
+    const correctedForm = {...form, daterec, datecomp, minutes};
     const result = await window.api.updateCompanyTicket({oldCompany: ticket, newCompany: correctedForm})
     console.log(result);
     if (result) onComplete();
   }
 
   useEffect(()=> {
-    console.log(ticket);
     setForm({
       ...ticket,
       product: ticket.product ?? '',

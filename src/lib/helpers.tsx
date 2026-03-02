@@ -2,7 +2,7 @@ import { tvDevice } from "../../electron/lib/teamviewer"
 
 export function titleCase(s: string | undefined) {
   if (!s) return '';
-  return s.toLowerCase().replace(/\b[\p{L}\p{N}]/gu, (c) => c.toUpperCase());
+  return s.toLowerCase().replace(/(?<!['’])\b[\p{L}\p{N}]/gu, (c) => c.toUpperCase());
 }
 
 export function getDateFromDateString(date: string | number | Date): Date | undefined {
