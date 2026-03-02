@@ -204,6 +204,7 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
     </div>
     <div className="form-floating mb-2">
         <textarea 
+          maxLength={500}
           className="form-control" 
           id="solution" placeholder="" 
           style={{height: "110px", resize: "none"}}
@@ -216,7 +217,6 @@ function TicketEntry({ticket, defaultTech, onComplete}:Prop) {
       <div className="col-4">
         <div className="form-floating mb-2">
         <input
-          maxLength={500}
           type="date"
           className="form-control"
           id="dateReceived"
