@@ -32,14 +32,14 @@ interface Window {
     findCompany: (opts: { query: string }) => Promise<[]>,
     getOpenTickets: () => Promise<[]>,
     findLastTicketsByCompany: (opts: { company: string }) => Promise<[]>,
-    updateCompanyTicket: (opts: {oldCompany: unknown, newCompany: unknown}) => Promise<boolean>
+    updateCompanyTicket: (opts: { oldCompany: unknown, newCompany: unknown }) => Promise<boolean>
 
     //other
     getTeamviewerDevices: (opts?: { force: boolean }) => Promise<[]>
   },
   app: {
     firstRun: () => Promise<boolean>,
-    updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string }) => Promise<boolean>,
+    updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string, startup: boolean }) => Promise<boolean>,
     getCachedSettings: () => Promise<Record<'displayName' | 'teamviewerLocation', string>>,
     selectTeamviewer: () => Promise<string | undefined>,
     getPrefilledSearchDefault: (opts: { companyName: string }) => Promise<string>,

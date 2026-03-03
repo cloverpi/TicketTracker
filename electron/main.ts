@@ -101,8 +101,10 @@ async function createWindow() {
     closeButtonWin.loadFile(path.join(RENDERER_DIST, 'closeButton.html'));
   }
 
-  win.webContents.openDevTools({ mode: 'detach' });
-  closeButtonWin.webContents.openDevTools({ mode: 'detach' })
+  if (VITE_DEV_SERVER_URL) {
+    win.webContents.openDevTools({ mode: 'detach' });
+    closeButtonWin.webContents.openDevTools({ mode: 'detach' });
+  }
 
   const windowScreen = screen.getPrimaryDisplay().workAreaSize
   width = windowScreen.width;
@@ -226,7 +228,7 @@ app.whenReady().then(() => {
   tray.setContextMenu(contextMenu)
 
   tray.on("click", () => {
-    showSidebar()
+    tray?.popUpContextMenu();
   })
 })
 
@@ -239,12 +241,16 @@ ipcMain.handle("getCachedSettings", async (_event, _) => {
 });
 
 ipcMain.handle("updateSettings", async (_event, opts) => {
-  const { user, pass, displayName, teamviewerLocation } = opts;
+  const { user, pass, displayName, teamviewerLocation, startup } = opts;
   const connectionStatus = await testConnection(user, pass);
   console.log(`connection: ${connectionStatus}`);
   if (!connectionStatus) return false;
   setSettings(user, pass, displayName, teamviewerLocation);
   firstRun = false;
+
+  app.setLoginItemSettings({
+    openAtLogin: startup,
+  })
 
   const settings = await getSettings();
   if (settings && settings.token) {

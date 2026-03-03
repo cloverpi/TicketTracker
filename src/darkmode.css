@@ -151,3 +151,23 @@ tr.table-row>th {
   color: var(--bs-primary-text-emphasis);
   user-select: none;
 }
+
+/* .form-check-input {
+  transform: scale(2);
+  margin-top: 0.25rem;
+} */
+
+.startup-switch .form-check-input {
+  width: 3.25rem;
+  height: 1.75rem;
+  margin-top: 0.2rem;
+}
+
+.startup-switch .form-check-input:checked {
+  background-size: 1.25rem 1.25rem;
+}
+
+.startup-switch .form-check-label {
+  padding-left: 0.4rem;
+  line-height: 1.9rem;
+}

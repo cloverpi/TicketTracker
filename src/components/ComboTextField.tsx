@@ -15,7 +15,6 @@ type ComboTextFieldProps = {
 function ComboTextField({
   id,
   focus,
-  tabIndex,
   label,
   options,
   value,

@@ -10,6 +10,7 @@ function Setup( {onComplete}: Props ) {
     const [pass, setPass] = useState('');
     const [displayName, setDisplayName] = useState('');
     const [teamviewerLocation, setTeamviewerLocation] = useState('C:\\Program Files (x86)\\TeamViewer\\TeamViewer.exe');
+    const [startup, setStartup] = useState(true);
     const [error, setError] = useState(false);
   
     const handleUserChange = (e:  React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +22,7 @@ function Setup( {onComplete}: Props ) {
     }
 
     const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDisplayName(e.target.value);
+        setDisplayName(e.target.value.toLocaleUpperCase());
     }
 
     const handleTeamviewerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,11 +32,14 @@ function Setup( {onComplete}: Props ) {
     const handleOpenDialog = async () => {
         const file = await window.app.selectTeamviewer();
         if (file) setTeamviewerLocation(file);
+    }
 
+    const handleStartupToggle = () => {
+        setStartup(!startup);
     }
 
     const handleSubmit = async () => {
-        const res = await window.app.updateSettings({user, pass, displayName, teamviewerLocation});
+        const res = await window.app.updateSettings({user, pass, displayName, teamviewerLocation, startup});
         setError(!res);
         if (res) { 
             onComplete();
@@ -52,15 +56,15 @@ function Setup( {onComplete}: Props ) {
                     <div className="modal-body">
                         <h6>Enter your credentials: </h6>
                         <div className="form-floating mb-2">
-                            <input type="text" className={`form-control ${error ? 'is-invalid' : ''}`} id="user" placeholder="" onChange={handleUserChange} />
+                            <input type="text" className={`form-control ${error ? 'is-invalid' : ''}`} id="user" value={user} placeholder="" onChange={handleUserChange} />
                             <label htmlFor="user">DB Username</label>
                         </div>
                         <div className="form-floating mb-2">
-                            <input type="password" className={`form-control ${error ? 'is-invalid' : ''}`} id="pass" placeholder="" onChange={handlePasswordChange} />
+                            <input type="password" className={`form-control ${error ? 'is-invalid' : ''}`} id="pass" value={pass} placeholder="" onChange={handlePasswordChange} />
                             <label htmlFor="pass">DB Password</label>
                         </div>
                         <div className="form-floating mb-2">
-                            <input type="text" className={`form-control ${error ? 'is-invalid' : ''}`} id="displayName" placeholder="" onChange={handleDisplayNameChange} />
+                            <input type="text" className={`form-control ${error ? 'is-invalid' : ''}`} id="displayName" value={displayName} placeholder="" onChange={handleDisplayNameChange} />
                             <label htmlFor="displayName">Display Name</label>
                         </div>
                         <div className="input-group mb-2">
@@ -70,8 +74,13 @@ function Setup( {onComplete}: Props ) {
                                 <label htmlFor="teamviewerInput">Select Teamviewer exe...</label>
                             </div>
                         </div>
+                        <div className="col-12 form-check form-switch startup-switch mb-3">
+                            <input className="form-check-input" type="checkbox" role="switch" id="startup" checked={startup} readOnly onClick={handleStartupToggle} />
+                             <label className="form-check-label" htmlFor="startup"> Run at login </label>
+                            </div>
+
                         <div className="col-4  mb-2 d-flex flex-column justify-content-end">
-                            <button type="button" className="btn btn-primary" style={{width: '100%'}} onClick={handleSubmit}>Submit</button>
+                            <button type="button" className="btn btn-primary" style={{width: '100%', height: '50px'}} onClick={handleSubmit}>Submit</button>
                         </div>
                         
                     </div>

@@ -42,6 +42,14 @@ function App() {
   </>
 
   const mainView = <>
+    <div style={{ position: "relative" }}>
+      <button
+        onClick={() => setFirstRun(true)} style={{ position: "absolute", top: 0, right: 0, border: "none", background: "transparent", fontSize: "1.2rem", padding: "0.25rem 0.5rem", cursor: "pointer" }}
+        title="Settings"
+      >
+        ⚙
+      </button>
+    </div>
     <TicketSelection onSelect={selectSearch} />
     {selectedTicket && 
     <>

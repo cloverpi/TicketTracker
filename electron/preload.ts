@@ -59,7 +59,7 @@ contextBridge.exposeInMainWorld('app', {
   firstRun: () => {
     return ipcRenderer.invoke("firstRun");
   },
-  updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string }) => {
+  updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string, startup: boolean }) => {
     return ipcRenderer.invoke("updateSettings", opts);
   },
   getCachedSettings: () => {

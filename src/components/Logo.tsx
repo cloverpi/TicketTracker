@@ -18,14 +18,14 @@ function Logo({grey, noTitle, transparent, allowAnimate}: Props) {
         <div style={{ position: "relative" }}>
             <img
             className={`${allowAnimate && spin ? "spin-slow" : ""}`}
-            src="/lifering.svg"
+            src="./lifering.svg"
             style={{ position: "relative", zIndex: 1, width: '140px' }}
             onMouseEnter={() => setSpin(true)}
             onMouseLeave={() => setSpin(false)}
             />
 
             <img
-            src="/wave-min-left.svg"
+            src="./wave-min-left.svg"
             style={{
                 position: "absolute",
                 width: '210px',

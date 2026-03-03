@@ -16,7 +16,7 @@ export function dbConnectionProperties(settings: RegistrySettings) {
 export async function connect() {
   if (!conn) {
     console.log('Connecting to DB.');
-    conn = await odbc.connect(`DSN=CT-Test;UID=${connectionSettings.user};PWD=${connectionSettings.pass}`);
+    conn = await odbc.connect(`DSN=CT;UID=${connectionSettings.user};PWD=${connectionSettings.pass}`);
   }
 }
 
@@ -57,7 +57,6 @@ function convertToDBString(value: string | number | boolean | Date | undefined |
         return toDateString(value);
       }
   }
-  const _exhaustive: never = value;
   throw new Error("Unhandled type");
 }
 
@@ -174,7 +173,7 @@ async function getLastTicketNumber() {
 
 async function insertNewTicket(dbSafeCompanyTicket: CompanyTicketDBInsert) {
   const defaultValues = { charge: 1, waiting: 0, cancelled: 0, current: 0 };
-  const result = await sendQuery(`
+  await sendQuery(`
     INSERT INTO servtrack (serviceid, company, product, model, serialnum, daterec, charge, cod, completed, cancelled, waiting, tech, datecomp, problem, calltype, current, branch, solution, software, hardware, rmmonitor, minutes)
     VALUES (${dbSafeCompanyTicket.serviceid}, 
             ${dbSafeCompanyTicket.company},
@@ -203,7 +202,7 @@ async function insertNewTicket(dbSafeCompanyTicket: CompanyTicketDBInsert) {
 }
 
 async function updateExistingTicket(dbSafeCompanyTicket: CompanyTicketDBInsert, ticketNumber: number) {
-  const result = await sendQuery(`
+  await sendQuery(`
       UPDATE servtrack SET
       product    =   ${dbSafeCompanyTicket.product},
       model      =   ${dbSafeCompanyTicket.model},
@@ -222,14 +221,14 @@ async function updateExistingTicket(dbSafeCompanyTicket: CompanyTicketDBInsert, 
 }
 
 async function updateSystemTicketNumber(ticketNumber: string) {
-  const result = await sendQuery(`
+  await sendQuery(`
       UPDATE system SET
       ${eq('serviceid', ticketNumber)}
   `);
 }
 
 async function updateCompany(dbSafeCompanyTicket: CompanyTicketDBInsert) {
-  const result = await sendQuery(`
+  await sendQuery(`
       UPDATE cust SET
       contact    =   ${dbSafeCompanyTicket.contact},
       phone      =   ${dbSafeCompanyTicket.phone},
@@ -246,6 +245,7 @@ export async function updateCompanyTicket(oldCompanyTicket: CompanyTicket, newCo
     if (newCompanyTicket.serviceid == undefined) return;  //fucking Typescript.
 
     const dbSafeCompanyTicket = convertCompanyTicketToDBStrings(newCompanyTicket);
+    // console.log(dbSafeCompanyTicket);
     await updateExistingTicket(dbSafeCompanyTicket, +newCompanyTicket.serviceid);
   } else {
     let serviceid = await getLastTicketNumber();
