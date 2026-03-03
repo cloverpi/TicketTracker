@@ -1,7 +1,7 @@
 {
   "name": "tickettracker",
   "private": true,
-  "version": "0.0.24",
+  "version": "0.0.25",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -44,15 +44,21 @@
       "dist/**",
       "dist-electron/**",
       "package.json"
-      ],
+    ],
     "extraResources": [
       {
         "from": "build/installers",
         "to": "installers"
       }
     ],
+    "win": {
+      "icon": "build/icon.ico"
+    },
     "nsis": {
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "perMachine": true,
+      "allowElevation": true,
+      "runAfterFinish": false
     }
   },
   "main": "dist-electron/main.js"
