@@ -1,7 +1,7 @@
 {
   "name": "tickettracker",
   "private": true,
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -40,9 +40,14 @@
     "vite-plugin-electron-renderer": "^0.14.5"
   },
   "build": {
+  "files": [
+    "dist/**",
+    "dist-electron/**",
+    "package.json"
+    ],
     "extraResources": [
       {
-        "from": "build/installers",
+        "from": "installers",
         "to": "installers"
       }
     ],
