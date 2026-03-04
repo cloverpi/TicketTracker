@@ -1,87 +1,84 @@
-import { ipcRenderer, contextBridge } from 'electron'
-import { CompanyTicket } from './lib/dbTypes'
+import { ipcRenderer, contextBridge } from 'electron';
+import { CompanyTicket } from './lib/dbTypes';
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
   on(...args: Parameters<typeof ipcRenderer.on>) {
-    const [channel, listener] = args
-    return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))
+    const [channel, listener] = args;
+    return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args));
   },
   off(...args: Parameters<typeof ipcRenderer.off>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.off(channel, ...omit)
+    const [channel, ...omit] = args;
+    return ipcRenderer.off(channel, ...omit);
   },
   send(...args: Parameters<typeof ipcRenderer.send>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.send(channel, ...omit)
+    const [channel, ...omit] = args;
+    return ipcRenderer.send(channel, ...omit);
   },
   invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.invoke(channel, ...omit)
+    const [channel, ...omit] = args;
+    return ipcRenderer.invoke(channel, ...omit);
   },
 
   // You can expose other APTs you need here.
   // ...
-})
+});
 
 contextBridge.exposeInMainWorld('api', {
   //db
   findByPhone: (opts: { phone: string }) => {
-    return ipcRenderer.invoke("findByPhone", opts);
+    return ipcRenderer.invoke('findByPhone', opts);
   },
   findByCompanyName: (opts: { company: string }) => {
-    return ipcRenderer.invoke("findByCompanyName", opts);
+    return ipcRenderer.invoke('findByCompanyName', opts);
   },
   findCompany: (opts: { query: string }) => {
-    return ipcRenderer.invoke("findCompany", opts);
+    return ipcRenderer.invoke('findCompany', opts);
   },
   getOpenTickets: () => {
-    return ipcRenderer.invoke("getOpenTickets");
+    return ipcRenderer.invoke('getOpenTickets');
   },
   findLastTicketsByCompany: (opts: { company: string }) => {
-    return ipcRenderer.invoke("findLastTicketsByCompany", opts);
+    return ipcRenderer.invoke('findLastTicketsByCompany', opts);
   },
-  updateCompanyTicket: (opts: { oldCompany: CompanyTicket, newCompany: CompanyTicket }) => {
-    return ipcRenderer.invoke("updateCompanyTicket", opts)
+  updateCompanyTicket: (opts: { oldCompany: CompanyTicket; newCompany: CompanyTicket }) => {
+    return ipcRenderer.invoke('updateCompanyTicket', opts);
   },
 
   //other
   getTeamviewerDevices: (opts?: { force: boolean }) => {
-    return ipcRenderer.invoke("getTeamviewerDevices", opts);
+    return ipcRenderer.invoke('getTeamviewerDevices', opts);
   },
-
-
-
 });
 
 contextBridge.exposeInMainWorld('app', {
   //
   firstRun: () => {
-    return ipcRenderer.invoke("firstRun");
+    return ipcRenderer.invoke('firstRun');
   },
-  updateSettings: (opts: { user: string, pass: string, displayName: string, teamviewerLocation: string, startup: boolean }) => {
-    return ipcRenderer.invoke("updateSettings", opts);
+  updateSettings: (opts: { user: string; pass: string; displayName: string; teamviewerLocation: string; startup: boolean }) => {
+    return ipcRenderer.invoke('updateSettings', opts);
   },
   getCachedSettings: () => {
-    return ipcRenderer.invoke("getCachedSettings");
+    return ipcRenderer.invoke('getCachedSettings');
   },
   selectTeamviewer: () => {
-    return ipcRenderer.invoke("selectTeamviewer");
+    return ipcRenderer.invoke('selectTeamviewer');
   },
   getPrefilledSearchDefault: (opts: { companyName: string }) => {
-    return ipcRenderer.invoke("getPrefilledSearchDefault", opts);
+    return ipcRenderer.invoke('getPrefilledSearchDefault', opts);
   },
-  setPrefilledSearchDefault: (opts: { companyName: string, query: string }) => {
-    return ipcRenderer.invoke("setPrefilledSearchDefault", opts);
+  setPrefilledSearchDefault: (opts: { companyName: string; query: string }) => {
+    return ipcRenderer.invoke('setPrefilledSearchDefault', opts);
   },
-  setTvPassword: (opts: { id: number, pass: string }) => {
-    return ipcRenderer.invoke("setTvPassword", opts);
+  setTvPassword: (opts: { id: number; pass: string }) => {
+    return ipcRenderer.invoke('setTvPassword', opts);
   },
   launchTeamviewer: (opts: { id: number }) => {
-    return ipcRenderer.invoke("launchTeamviewer", opts);
+    return ipcRenderer.invoke('launchTeamviewer', opts);
   },
 });
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  closeSidebar: () => ipcRenderer.send("sidebar-close")
+contextBridge.exposeInMainWorld('electronAPI', {
+  closeSidebar: () => ipcRenderer.send('sidebar-close'),
 });

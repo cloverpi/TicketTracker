@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from 'react';
 
 type ComboTextFieldProps = {
   id: string;
@@ -12,36 +12,24 @@ type ComboTextFieldProps = {
   maxMenuHeightPx?: number;
 };
 
-function ComboTextField({
-  id,
-  focus,
-  label,
-  options,
-  value,
-  onChange,
-  widthPx,
-  maxMenuHeightPx = 240
-}: ComboTextFieldProps) {
+function ComboTextField({ id, focus, label, options, value, onChange, widthPx, maxMenuHeightPx = 240 }: ComboTextFieldProps) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
-useEffect(() => {
-  if (!open) return;
+  useEffect(() => {
+    if (!open) return;
 
-  const q = value.trim().toLowerCase();
-  if (!q) {
-    setActiveIndex(-1);
-    return;
-  }
+    const q = value.trim().toLowerCase();
+    if (!q) {
+      setActiveIndex(-1);
+      return;
+    }
 
-  const matchIndex = options.findIndex((o) =>
-    o.toLowerCase().includes(q)
-  );
+    const matchIndex = options.findIndex((o) => o.toLowerCase().includes(q));
 
-  setActiveIndex(matchIndex);
-}, [value, open, options]);
-
+    setActiveIndex(matchIndex);
+  }, [value, open, options]);
 
   const close = () => {
     setOpen(false);
@@ -66,34 +54,34 @@ useEffect(() => {
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
       move(1);
       return;
     }
-    if (e.key === "ArrowUp") {
+    if (e.key === 'ArrowUp') {
       e.preventDefault();
       move(-1);
       return;
     }
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       if (open && activeIndex >= 0 && activeIndex < options.length) {
         e.preventDefault();
         pick(options[activeIndex]);
       }
       return;
     }
-    if (e.key === "Tab") {
+    if (e.key === 'Tab') {
       if (open && activeIndex >= 0 && activeIndex < options.length) {
         pick(options[activeIndex]);
       }
-      if (open && activeIndex == -1){
+      if (open && activeIndex == -1) {
         e.preventDefault();
         pick(options[0]);
       }
       return;
     }
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       if (open) {
         e.preventDefault();
         close();
@@ -103,10 +91,7 @@ useEffect(() => {
   };
 
   return (
-    <div
-      className="form-floating position-relative mb-2"
-      style={widthPx ? { width: `${widthPx}px` } : undefined}
-    >
+    <div className="form-floating position-relative mb-2" style={widthPx ? { width: `${widthPx}px` } : undefined}>
       <input
         autoFocus={focus}
         // tabIndex={tabIndex}
@@ -145,14 +130,14 @@ useEffect(() => {
           className="dropdown-menu show w-100"
           style={{
             maxHeight: `${maxMenuHeightPx}px`,
-            overflowY: "auto"
+            overflowY: 'auto',
           }}
         >
           {options.map((opt, i) => (
             <button
               key={opt}
               type="button"
-              className={"dropdown-item" + (i === activeIndex ? " active" : "")}
+              className={'dropdown-item' + (i === activeIndex ? ' active' : '')}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => pick(opt)}
             >

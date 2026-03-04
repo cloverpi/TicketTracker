@@ -1,12 +1,19 @@
-import odbc from "odbc";
-import { RegistrySettings } from "./settings";
-import { CompanyTicket, CompanyTicketDBInsert, decodeCompanyRows, decodeCompanyTicketRows, decodeTicketRows, normalizeRows } from "./dbTypes";
+import odbc from 'odbc';
+import { RegistrySettings } from './settings';
+import {
+  CompanyTicket,
+  CompanyTicketDBInsert,
+  decodeCompanyRows,
+  decodeCompanyTicketRows,
+  decodeTicketRows,
+  normalizeRows,
+} from './dbTypes';
 
 let conn: odbc.Connection | undefined = undefined;
 const connectionSettings = {
   user: '',
-  pass: ''
-}
+  pass: '',
+};
 
 export function dbConnectionProperties(settings: RegistrySettings) {
   connectionSettings.user = settings.user;
@@ -39,17 +46,17 @@ function toDateString(date: Date): string {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
-  return `{d '${year}-${month}-${day}'}`
+  return `{d '${year}-${month}-${day}'}`;
 }
 
 function convertToDBString(value: string | number | boolean | Date | undefined | null): string {
   if (value == null) return 'NULL';
   switch (typeof value) {
     case 'string':
-      if (value.length == 0) return 'NULL'
+      if (value.length == 0) return 'NULL';
       return `'${sqlEscape(value)}'`;
     case 'number':
-      return `${value}`
+      return `${value}`;
     case 'boolean':
       return `${value ? 1 : 0}`;
     case 'object':
@@ -57,14 +64,13 @@ function convertToDBString(value: string | number | boolean | Date | undefined |
         return toDateString(value);
       }
   }
-  throw new Error("Unhandled type");
+  throw new Error('Unhandled type');
 }
 
 function convertCompanyTicketToDBStrings(companyTicket: CompanyTicket): CompanyTicketDBInsert {
   const companyTicketStrings = {} as CompanyTicketDBInsert;
   for (const k in companyTicket) {
-    companyTicketStrings[k as keyof CompanyTicketDBInsert] =
-      convertToDBString(companyTicket[k as keyof CompanyTicket]);
+    companyTicketStrings[k as keyof CompanyTicketDBInsert] = convertToDBString(companyTicket[k as keyof CompanyTicket]);
   }
 
   return companyTicketStrings;
@@ -75,19 +81,19 @@ function sqlEscape(value: string): string {
 }
 
 function eq(field: string, value: string | number | boolean | undefined | null) {
-  if (value == null) return ` ${field} = NULL `
+  if (value == null) return ` ${field} = NULL `;
   switch (typeof value) {
     case 'string':
-      return ` ${field} = '${sqlEscape(value)}' `
+      return ` ${field} = '${sqlEscape(value)}' `;
     case 'number':
-      return ` ${field} = ${value} `
+      return ` ${field} = ${value} `;
     case 'boolean':
-      return ` ${field} = ${value ? 1 : 0} `
+      return ` ${field} = ${value ? 1 : 0} `;
   }
 }
 
 function like(field: string, value: string) {
-  return ` UPPER(${field}) LIKE '%${sqlEscape(value.replaceAll(' ', '%').toUpperCase())}%' `
+  return ` UPPER(${field}) LIKE '%${sqlEscape(value.replaceAll(' ', '%').toUpperCase())}%' `;
 }
 
 async function sendQuery(q: string) {
@@ -106,40 +112,40 @@ async function sendQuery(q: string) {
 
 // --!  Fix int,  should be bool.
 export async function getOpenTickets() {
-  const result = await sendQuery(`
+  const result = (await sendQuery(`
     SELECT *
     FROM servtrack
     INNER JOIN cust ON TRIM(cust.company) = TRIM(servtrack.company)
     WHERE ${eq('completed', false)}
     ORDER BY serviceid DESC
-  `) as Record<string, unknown>[];
+  `)) as Record<string, unknown>[];
   const normalizedResult = normalizeRows([...result]);
   return decodeCompanyTicketRows(normalizedResult);
 }
 
 export async function findByPhone(phone: string) {
   if (!/\d/.test(phone)) return [];
-  const digits = phone.replace(/\D/g, "");
-  const noDigits = phone.replace(/\d/g, "");
+  const digits = phone.replace(/\D/g, '');
+  const noDigits = phone.replace(/\d/g, '');
   if (noDigits.length >= digits.length) return [];
 
   const phoneQuery = sqlEscape(`%${digits.slice(0, 3)}%${digits.slice(3, 6)}%${digits.slice(6)}%`);
 
-  const result = await sendQuery(`
+  const result = (await sendQuery(`
     SELECT TOP 7 *
     FROM cust
     WHERE Phone LIKE '${phoneQuery}'
-  `) as Record<string, unknown>[];
+  `)) as Record<string, unknown>[];
   const normalizedResult = normalizeRows([...result]);
   return decodeCompanyRows(normalizedResult);
 }
 
 export async function findByCompanyName(company: string) {
-  const result = await sendQuery(`
+  const result = (await sendQuery(`
     SELECT TOP 7 *
     FROM cust
     WHERE ${like('company', company)}
-  `) as Record<string, unknown>[];
+  `)) as Record<string, unknown>[];
   const normalizedResult = normalizeRows([...result]);
   return decodeCompanyRows(normalizedResult);
 }
@@ -148,26 +154,26 @@ export async function findCompany(query: string) {
   const phoneQuery = await findByPhone(query);
   const companyNameQuyery = await findByCompanyName(query);
 
-  return [...phoneQuery, ...companyNameQuyery]
+  return [...phoneQuery, ...companyNameQuyery];
 }
 
 export async function findLastTicketsByCompany(company: string) {
-  const result = await sendQuery(`
+  const result = (await sendQuery(`
     SELECT TOP 6 *
     FROM servtrack
     WHERE ${eq('company', company)}
     ORDER BY serviceid DESC
-  `) as Record<string, unknown>[];
-  const normalizedResult = normalizeRows([...result])
+  `)) as Record<string, unknown>[];
+  const normalizedResult = normalizeRows([...result]);
   return decodeTicketRows(normalizedResult);
 }
 
 async function getLastTicketNumber() {
-  const [result] = await sendQuery(`
+  const [result] = (await sendQuery(`
       SELECT TOP 1 serviceid
       FROM servtrack
       ORDER BY serviceid DESC
-    `) as Record<string, string>[];
+    `)) as Record<string, string>[];
   return result.serviceid;
 }
 
@@ -242,7 +248,7 @@ export async function updateCompanyTicket(oldCompanyTicket: CompanyTicket, newCo
     let completed = false;
     if (newCompanyTicket.datecomp != undefined) completed = true;
     newCompanyTicket = { ...newCompanyTicket, completed };
-    if (newCompanyTicket.serviceid == undefined) return;  //fucking Typescript.
+    if (newCompanyTicket.serviceid == undefined) return; //fucking Typescript.
 
     const dbSafeCompanyTicket = convertCompanyTicketToDBStrings(newCompanyTicket);
     // console.log(dbSafeCompanyTicket);
@@ -256,10 +262,11 @@ export async function updateCompanyTicket(oldCompanyTicket: CompanyTicket, newCo
     newCompanyTicket = { ...newCompanyTicket, serviceid, completed };
     const dbSafeCompanyTicket = convertCompanyTicketToDBStrings(newCompanyTicket);
     await insertNewTicket(dbSafeCompanyTicket);
-    await updateSystemTicketNumber((+serviceid + 1).toString())
+    await updateSystemTicketNumber((+serviceid + 1).toString());
   }
 
-  if (oldCompanyTicket.phone != newCompanyTicket.phone ||
+  if (
+    oldCompanyTicket.phone != newCompanyTicket.phone ||
     oldCompanyTicket.email != newCompanyTicket.email ||
     oldCompanyTicket.contact != newCompanyTicket.contact
   ) {

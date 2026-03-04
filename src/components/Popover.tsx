@@ -1,5 +1,5 @@
-import { useFloating, offset, flip, shift, autoUpdate } from "@floating-ui/react";
-import { useState } from "react";
+import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
+import { useState } from 'react';
 
 interface Props {
   children: React.ReactNode;
@@ -11,12 +11,8 @@ function Popover({ children, content }: Props) {
 
   const { refs, floatingStyles } = useFloating({
     open,
-    middleware: [
-      offset(8),
-      flip(),
-      shift({ padding: 8 })
-    ],
-    whileElementsMounted: autoUpdate
+    middleware: [offset(8), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate,
   });
 
   return (
@@ -25,7 +21,7 @@ function Popover({ children, content }: Props) {
         ref={refs.setReference}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        style={{ display: "inline-block" }}
+        style={{ display: 'inline-block' }}
       >
         {children}
       </div>
@@ -35,16 +31,16 @@ function Popover({ children, content }: Props) {
           ref={refs.setFloating}
           style={{
             ...floatingStyles,
-            background: "#212529",
-            color: "white",
-            padding: "8px 12px",
+            background: '#212529',
+            color: 'white',
+            padding: '8px 12px',
             borderRadius: 6,
-            fontSize: "1.2rem",
+            fontSize: '1.2rem',
             lineHeight: 1.4,
             maxWidth: 300,
-            whiteSpace: "normal",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
-            zIndex: 1000
+            whiteSpace: 'normal',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+            zIndex: 1000,
           }}
         >
           {content}

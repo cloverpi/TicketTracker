@@ -1,14 +1,31 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, Tray } from 'electron'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
-import { connect, dbConnectionProperties, findByCompanyName, findByPhone, findCompany, findLastTicketsByCompany, getOpenTickets, testConnection, updateCompanyTicket } from './lib/db'
-import { getCachedSettings, getSettings, setSettings } from './lib/settings'
-import { getCustomSearchFromFile, getPrefilledSearchDefault, getTeamviewerDevices, setPrefilledSearchDefault, setTvPassword, teamviewerConnectionProperties, launchTeamviewer } from './lib/teamviewer'
-import { screen } from "electron"
-
+import { app, BrowserWindow, dialog, ipcMain, Menu, Tray } from 'electron';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import {
+  connect,
+  dbConnectionProperties,
+  findByCompanyName,
+  findByPhone,
+  findCompany,
+  findLastTicketsByCompany,
+  getOpenTickets,
+  testConnection,
+  updateCompanyTicket,
+} from './lib/db';
+import { getCachedSettings, getSettings, setSettings } from './lib/settings';
+import {
+  getCustomSearchFromFile,
+  getPrefilledSearchDefault,
+  getTeamviewerDevices,
+  setPrefilledSearchDefault,
+  setTvPassword,
+  teamviewerConnectionProperties,
+  launchTeamviewer,
+} from './lib/teamviewer';
+import { screen } from 'electron';
 
 // const require = createRequire(import.meta.url)
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The built directory structure
 //
@@ -19,18 +36,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // │ │ ├── main.js
 // │ │ └── preload.mjs
 // │
-process.env.APP_ROOT = path.join(__dirname, '..')
+process.env.APP_ROOT = path.join(__dirname, '..');
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
-export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
-export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
+export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
+export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron');
+export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist');
 
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST;
 
-let win: BrowserWindow | null
+let win: BrowserWindow | null;
 let firstRun: boolean = false;
-let tray: Tray | null = null
+let tray: Tray | null = null;
 
 let closeButtonWin: BrowserWindow | null;
 const WINDOW_WIDTH = 600;
@@ -39,7 +56,6 @@ let height = 1080;
 let shownX = 0;
 let hiddenX = 0;
 let sliding = false;
-
 
 async function createWindow() {
   try {
@@ -72,7 +88,7 @@ async function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
-  })
+  });
 
   closeButtonWin = new BrowserWindow({
     width: 24,
@@ -85,14 +101,14 @@ async function createWindow() {
     skipTaskbar: true,
     focusable: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs')
-    }
-  })
+      preload: path.join(__dirname, 'preload.mjs'),
+    },
+  });
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', (new Date).toLocaleString())
-  })
+    win?.webContents.send('main-process-message', new Date().toLocaleString());
+  });
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
@@ -109,12 +125,12 @@ async function createWindow() {
   }
 
   const display = screen.getAllDisplays().reduce((a, b) => {
-    const aRight = a.bounds.x + a.bounds.width
-    const bRight = b.bounds.x + b.bounds.width
-    return bRight > aRight ? b : a
-  })
+    const aRight = a.bounds.x + a.bounds.width;
+    const bRight = b.bounds.x + b.bounds.width;
+    return bRight > aRight ? b : a;
+  });
 
-  const { x, y } = display.workArea
+  const { x, y } = display.workArea;
 
   width = display.workArea.width;
   height = display.workArea.height;
@@ -126,22 +142,18 @@ async function createWindow() {
     x: hiddenX,
     y,
     width: WINDOW_WIDTH,
-    height: height
-  })
+    height: height,
+  });
 
   const rightEdge = x + width;
 
   setInterval(() => {
     const point = screen.getCursorScreenPoint();
 
-    if (
-      point.x >= rightEdge - 2 &&
-      point.y <= height * 0.8 &&
-      point.y >= height * 0.2 &&
-      !sliding) {
+    if (point.x >= rightEdge - 2 && point.y <= height * 0.8 && point.y >= height * 0.2 && !sliding) {
       showSidebar();
     }
-  }, 50)
+  }, 50);
 }
 
 function positionHandle() {
@@ -149,52 +161,46 @@ function positionHandle() {
 
   const b = win.getBounds();
 
-  closeButtonWin.setPosition(
-    b.x - 24,
-    b.y + 200
-  )
+  closeButtonWin.setPosition(b.x - 24, b.y + 200);
 }
 
 function slideTo(targetX: number) {
   if (win == undefined || win == null) return;
   const bounds = win.getBounds();
 
-  let timeout: ReturnType<typeof setTimeout> | undefined = undefined
-
+  let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
   const step = () => {
     timeout = undefined;
     if (win == undefined || win == null) return;
-    const current = win.getBounds().x
-
+    const current = win.getBounds().x;
 
     if (Math.abs(current - targetX) < 10) {
       // console.log(current + (targetX - current) * 0.10);
-      win.setPosition(targetX, bounds.y)
+      win.setPosition(targetX, bounds.y);
       positionHandle();
       sliding = false;
-      return
+      return;
     }
 
-    const next =
-      current + (targetX - current) * 0.10
+    const next = current + (targetX - current) * 0.1;
 
-    win.setPosition(Math.round(next), bounds.y)
+    win.setPosition(Math.round(next), bounds.y);
     positionHandle();
 
     if (timeout == undefined) timeout = setTimeout(step, 20);
-  }
+  };
 
-  step()
+  step();
 }
 
 function showSidebar() {
   if (win == undefined) return;
   if (sliding) return;
   sliding = true;
-  win.show()
-  closeButtonWin?.show()
-  slideTo(shownX)
+  win.show();
+  closeButtonWin?.show();
+  slideTo(shownX);
 }
 
 function hideSidebar() {
@@ -202,7 +208,6 @@ function hideSidebar() {
   sliding = true;
   slideTo(hiddenX);
   closeButtonWin?.hide();
-
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -210,50 +215,48 @@ function hideSidebar() {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
-    win = null
+    app.quit();
+    win = null;
   }
-})
+});
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 app.whenReady().then(createWindow);
 
 app.whenReady().then(() => {
-  tray = new Tray(
-    path.join(process.env.VITE_PUBLIC, "icon.png")
-  )
+  tray = new Tray(path.join(process.env.VITE_PUBLIC, 'icon.png'));
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: "Show", click: () => showSidebar() },
-    { label: "Hide", click: () => hideSidebar() },
-    { type: "separator" },
-    { label: "Quit", click: () => app.quit() }
-  ])
+    { label: 'Show', click: () => showSidebar() },
+    { label: 'Hide', click: () => hideSidebar() },
+    { type: 'separator' },
+    { label: 'Quit', click: () => app.quit() },
+  ]);
 
-  tray.setToolTip("TicketTracker")
-  tray.setContextMenu(contextMenu)
+  tray.setToolTip('TicketTracker');
+  tray.setContextMenu(contextMenu);
 
-  tray.on("click", () => {
+  tray.on('click', () => {
     tray?.popUpContextMenu();
-  })
-})
+  });
+});
 
-ipcMain.handle("firstRun", () => {
+ipcMain.handle('firstRun', () => {
   return firstRun;
 });
 
-ipcMain.handle("getCachedSettings", async (_event, _) => {
+ipcMain.handle('getCachedSettings', async (_event, _) => {
   return getCachedSettings();
 });
 
-ipcMain.handle("updateSettings", async (_event, opts) => {
+ipcMain.handle('updateSettings', async (_event, opts) => {
   const { user, pass, displayName, teamviewerLocation, startup } = opts;
   const connectionStatus = await testConnection(user, pass);
   console.log(`connection: ${connectionStatus}`);
@@ -263,7 +266,7 @@ ipcMain.handle("updateSettings", async (_event, opts) => {
 
   app.setLoginItemSettings({
     openAtLogin: startup,
-  })
+  });
 
   const settings = await getSettings();
   if (settings && settings.token) {
@@ -274,60 +277,59 @@ ipcMain.handle("updateSettings", async (_event, opts) => {
   return true;
 });
 
-ipcMain.handle("selectTeamviewer", async (_event, _opts) => {
+ipcMain.handle('selectTeamviewer', async (_event, _opts) => {
   const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ["openFile"],
-    filters: [{ name: "Application", extensions: ["exe"] }]
+    properties: ['openFile'],
+    filters: [{ name: 'Application', extensions: ['exe'] }],
   });
   if (canceled) return;
   return filePaths[0];
 });
 
-ipcMain.handle("findByPhone", async (_event, opts) => {
+ipcMain.handle('findByPhone', async (_event, opts) => {
   return await findByPhone(opts.phone);
 });
 
-ipcMain.handle("findByCompanyName", async (_event, opts) => {
+ipcMain.handle('findByCompanyName', async (_event, opts) => {
   return await findByCompanyName(opts.company);
 });
 
-ipcMain.handle("findCompany", async (_event, opts) => {
+ipcMain.handle('findCompany', async (_event, opts) => {
   return await findCompany(opts.query);
 });
 
-ipcMain.handle("findLastTicketsByCompany", async (_event, opts) => {
+ipcMain.handle('findLastTicketsByCompany', async (_event, opts) => {
   return await findLastTicketsByCompany(opts.company);
 });
 
-ipcMain.handle("getOpenTickets", async () => {
+ipcMain.handle('getOpenTickets', async () => {
   return await getOpenTickets();
 });
 
-ipcMain.handle("updateCompanyTicket", async (_event, opts) => {
+ipcMain.handle('updateCompanyTicket', async (_event, opts) => {
   return await updateCompanyTicket(opts.oldCompany, opts.newCompany);
 });
 
-ipcMain.handle("getTeamviewerDevices", async (_event, opts) => {
+ipcMain.handle('getTeamviewerDevices', async (_event, opts) => {
   return await getTeamviewerDevices(opts);
 });
 
-ipcMain.handle("getPrefilledSearchDefault", async (_event, opts) => {
+ipcMain.handle('getPrefilledSearchDefault', async (_event, opts) => {
   return await getPrefilledSearchDefault(opts);
 });
 
-ipcMain.handle("setPrefilledSearchDefault", async (_event, opts) => {
+ipcMain.handle('setPrefilledSearchDefault', async (_event, opts) => {
   return await setPrefilledSearchDefault(opts);
 });
 
-ipcMain.handle("setTvPassword", async (_event, opts) => {
+ipcMain.handle('setTvPassword', async (_event, opts) => {
   return await setTvPassword(opts);
 });
 
-ipcMain.handle("launchTeamviewer", async (_event, opts) => {
+ipcMain.handle('launchTeamviewer', async (_event, opts) => {
   return await launchTeamviewer(opts);
 });
 
-
-ipcMain.on("sidebar-close", () => {
-  hideSidebar()
-})
+ipcMain.on('sidebar-close', () => {
+  hideSidebar();
+});

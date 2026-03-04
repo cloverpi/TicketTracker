@@ -1,12 +1,12 @@
-import { useState } from "react";
-import SearchDropdown from "./SearchDropDown";
-import { CompanyTicket } from "../electron/lib/dbTypes";
+import { useState } from 'react';
+import SearchDropdown from './SearchDropDown';
+import { CompanyTicket } from '../electron/lib/dbTypes';
 
 interface Prop {
-    onSelect: (v: CompanyTicket | undefined) => void
+  onSelect: (v: CompanyTicket | undefined) => void;
 }
 
-function SearchBar({onSelect}:Prop) {
+function SearchBar({ onSelect }: Prop) {
   const [matches, setMatches] = useState([]);
   const [search, setSearch] = useState('');
   const [searchTimer, setSearchTimer] = useState<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -18,50 +18,46 @@ function SearchBar({onSelect}:Prop) {
     setSearch(value);
     setLoading(true);
     clearTimeout(searchTimer);
-    setSearchTimer(setTimeout(async () => {
-      if (value.length > 2) {
-        console.log('fetching');
-        const results = await window.api.findCompany({query: value});
-        setMatches(results);
-      }
-      if (value.length == 0 ) setMatches([]);
-      clearTimeout(searchTimer);
-      setLoading(false);
-    }, timeout));
-  }
+    setSearchTimer(
+      setTimeout(async () => {
+        if (value.length > 2) {
+          console.log('fetching');
+          const results = await window.api.findCompany({ query: value });
+          setMatches(results);
+        }
+        if (value.length == 0) setMatches([]);
+        clearTimeout(searchTimer);
+        setLoading(false);
+      }, timeout)
+    );
+  };
 
   const selectSearchEntry = async (selection: CompanyTicket) => {
     setMatches([]);
     setSearch('');
     onSelect(selection);
-  }
+  };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: 'relative' }}>
       <div className="form-floating mb-4">
-        <input
-          type="text"
-          className="form-control"
-          id="floatingInput"
-          placeholder=""
-          value={search}
-          onChange={handleSearch}
-        />
+        <input type="text" className="form-control" id="floatingInput" placeholder="" value={search} onChange={handleSearch} />
         <label htmlFor="floatingInput">Search</label>
-        {loading && 
-        <div
-          className="spinner-border"
-          role="status"
-          style={{
-            position: "absolute",
-            right: "12px",
-            top: "25%",}}
-        />
-        }
+        {loading && (
+          <div
+            className="spinner-border"
+            role="status"
+            style={{
+              position: 'absolute',
+              right: '12px',
+              top: '25%',
+            }}
+          />
+        )}
       </div>
-      <SearchDropdown items={matches} onSelect={selectSearchEntry}/>
+      <SearchDropdown items={matches} onSelect={selectSearchEntry} />
     </div>
-  )
+  );
 }
 
-export default SearchBar
+export default SearchBar;

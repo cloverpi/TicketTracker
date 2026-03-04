@@ -67,6 +67,7 @@
 
 .dropdown-menu {
   --bs-dropdown-link-hover-bg: rgba(var(--bs-success-text-emphasis-rgb), 0.5) !important
+;
 }
 
 .accordion {
@@ -78,19 +79,19 @@
   background-color: rgba(var(--bs-emphasis-color-rgb), 0.05);
 }
 
-tr.row-hover>td,
-tr.row-hover>th {
+tr.row-hover > td,
+tr.row-hover > th {
   background-color: rgba(var(--bs-success-text-emphasis-rgb), 0.5) !important;
 }
 
-tr.row-active>td,
-tr.row-active>th {
+tr.row-active > td,
+tr.row-active > th {
   color: var(--bs-body-bg);
   background-color: var(--bs-success-text-emphasis) !important;
 }
 
-tr.table-row>td,
-tr.table-row>th {
+tr.table-row > td,
+tr.table-row > th {
   cursor: pointer;
 }
 

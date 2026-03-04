@@ -1,47 +1,44 @@
-import { useState } from 'react'
-import SearchBar from './SearchBar'
-import OpenTickets from './OpenTickets'
+import { useState } from 'react';
+import SearchBar from './SearchBar';
+import OpenTickets from './OpenTickets';
 import { CompanyTicket } from '../electron/lib/dbTypes';
 
 interface Prop {
-    onSelect: (v: CompanyTicket | undefined) => void
+  onSelect: (v: CompanyTicket | undefined) => void;
 }
 
-function TicketSelection( {onSelect} : Prop ) {
-    const [activeTab, setActiveTab] = useState('new');
+function TicketSelection({ onSelect }: Prop) {
+  const [activeTab, setActiveTab] = useState('new');
 
-    const tabs = [
-        { id: "new", label: "New Ticket" },
-        { id: "open", label: "Open Tickets" },
-    ];
+  const tabs = [
+    { id: 'new', label: 'New Ticket' },
+    { id: 'open', label: 'Open Tickets' },
+  ];
 
-    const tabContent: Record<string, JSX.Element> = {
-        new: <SearchBar onSelect={onSelect}/>,
-        open: <OpenTickets onSelect={onSelect}/>
-    }
+  const tabContent: Record<string, JSX.Element> = {
+    new: <SearchBar onSelect={onSelect} />,
+    open: <OpenTickets onSelect={onSelect} />,
+  };
 
-    const tabHandler = (tabId: string) => {
-        onSelect(undefined);
-        setActiveTab(tabId);
-    };
+  const tabHandler = (tabId: string) => {
+    onSelect(undefined);
+    setActiveTab(tabId);
+  };
 
-    return (
-        <>
-            <ul className="nav nav-tabs mb-2 mt-5">
-                {tabs.map((tab) => (
-                    <li className="nav-item" key={tab.id}>
-                    <button
-                        className={"nav-link " + (activeTab === tab.id ? "active" : "")}
-                        onClick={() => tabHandler(tab.id)}
-                    >
-                        {tab.label}
-                    </button>
-                    </li>
-                ))}
-            </ul>
-            {tabContent[activeTab]}
-        </>
-    )
+  return (
+    <>
+      <ul className="nav nav-tabs mb-2 mt-5">
+        {tabs.map((tab) => (
+          <li className="nav-item" key={tab.id}>
+            <button className={'nav-link ' + (activeTab === tab.id ? 'active' : '')} onClick={() => tabHandler(tab.id)}>
+              {tab.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+      {tabContent[activeTab]}
+    </>
+  );
 }
 
-export default TicketSelection
+export default TicketSelection;

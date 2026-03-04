@@ -1,4 +1,4 @@
-import Logo from "./Logo";
+import Logo from './Logo';
 
 interface Props {
   opacity?: number;
@@ -9,14 +9,14 @@ function HintBox({ opacity = 100, text = '' }: Props) {
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'fixed',
         inset: 0,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         opacity: opacity / 100,
-        pointerEvents: "none",
-        zIndex: 1050
+        pointerEvents: 'none',
+        zIndex: 1050,
       }}
     >
       <div className="border-0">
@@ -25,7 +25,6 @@ function HintBox({ opacity = 100, text = '' }: Props) {
         <br />
         <h5>{text}</h5>
       </div>
-      
     </div>
   );
 }
