@@ -134,7 +134,11 @@ async function createWindow() {
   setInterval(() => {
     const point = screen.getCursorScreenPoint();
 
-    if (point.x >= rightEdge - 2 && !sliding) {
+    if (
+      point.x >= rightEdge - 2 &&
+      point.y <= height * 0.8 &&
+      point.y >= height * 0.2 &&
+      !sliding) {
       showSidebar();
     }
   }, 50)
