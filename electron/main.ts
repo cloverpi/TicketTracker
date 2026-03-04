@@ -36,6 +36,8 @@ let closeButtonWin: BrowserWindow | null;
 const WINDOW_WIDTH = 600;
 let width = 1920;
 let height = 1080;
+let shownX = 0;
+let hiddenX = 0;
 let sliding = false;
 
 
@@ -106,26 +108,33 @@ async function createWindow() {
     closeButtonWin.webContents.openDevTools({ mode: 'detach' });
   }
 
-  const windowScreen = screen.getPrimaryDisplay().workAreaSize
-  width = windowScreen.width;
-  height = windowScreen.height;
+  const display = screen.getAllDisplays().reduce((a, b) => {
+    const aRight = a.bounds.x + a.bounds.width
+    const bRight = b.bounds.x + b.bounds.width
+    return bRight > aRight ? b : a
+  })
+
+  const { x, y } = display.workArea
+
+  width = display.workArea.width;
+  height = display.workArea.height;
+
+  shownX = x + width - WINDOW_WIDTH;
+  hiddenX = x + width;
 
   win.setBounds({
-    x: width,
-    y: 0,
+    x: hiddenX,
+    y,
     width: WINDOW_WIDTH,
-    height
-  });
+    height: height
+  })
+
+  const rightEdge = x + width;
 
   setInterval(() => {
-    const point = screen.getCursorScreenPoint()
-    const { width } =
-      screen.getPrimaryDisplay().workAreaSize
+    const point = screen.getCursorScreenPoint();
 
-    if (point.x >= width - 2 &&
-      point.y <= height * 0.8 &&
-      point.y >= height * 0.2 &&
-      !sliding) {
+    if (point.x >= rightEdge - 2 && !sliding) {
       showSidebar();
     }
   }, 50)
@@ -181,13 +190,13 @@ function showSidebar() {
   sliding = true;
   win.show()
   closeButtonWin?.show()
-  slideTo(width - WINDOW_WIDTH)
+  slideTo(shownX)
 }
 
 function hideSidebar() {
   if (sliding) return;
   sliding = true;
-  slideTo(width);
+  slideTo(hiddenX);
   closeButtonWin?.hide();
 
 }
