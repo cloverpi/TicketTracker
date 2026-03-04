@@ -153,11 +153,6 @@ tr.table-row > th {
   user-select: none;
 }
 
-/* .form-check-input {
-  transform: scale(2);
-  margin-top: 0.25rem;
-} */
-
 .startup-switch .form-check-input {
   width: 3.25rem;
   height: 1.75rem;
