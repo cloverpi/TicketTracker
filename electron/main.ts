@@ -198,8 +198,11 @@ function showSidebar() {
   if (win == undefined) return;
   if (sliding) return;
   sliding = true;
-  win.show();
   closeButtonWin?.show();
+  win.show();
+  // closeButtonWin?.setPosition(1000, 1000);
+  closeButtonWin?.moveTop();
+  win.moveTop();
   slideTo(shownX);
 }
 
@@ -209,6 +212,11 @@ function hideSidebar() {
   slideTo(hiddenX);
   closeButtonWin?.hide();
 }
+
+app.on("browser-window-focus", () => {
+  //closeButtonWin?.moveTop();
+  win?.moveTop();
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
