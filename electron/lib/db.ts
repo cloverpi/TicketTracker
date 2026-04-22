@@ -96,6 +96,10 @@ function like(field: string, value: string) {
   return ` UPPER(${field}) LIKE '%${sqlEscape(value.replaceAll(' ', '%').toUpperCase())}%' `;
 }
 
+function hasOdbcErrors(x: unknown): x is { odbcErrors: unknown } {
+  return typeof x === "object" && x !== null && "odbcErrors" in x
+}
+
 async function sendQuery(q: string) {
   try {
     if (!!conn) {
@@ -106,7 +110,12 @@ async function sendQuery(q: string) {
     }
   } catch (e) {
     console.log(e);
-    return []; // --!
+    if (hasOdbcErrors(e)) {
+      conn = undefined
+      await new Promise(r => setTimeout(r, 2000))
+      return sendQuery(q)
+    }
+    return [];
   }
 }
 

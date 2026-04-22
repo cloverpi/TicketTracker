@@ -1,0 +1,35 @@
+
+> tickettracker@0.0.32 dev
+> vite
+
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36m
+build started...[39m
+[36m
+build started...[39m
+
+  [32m[1mVITE[22m v6.4.1[39m  [2mready in [0m[1m489[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+transforming...
+transforming...
+[32m✓[39m 1 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mpreload.mjs  [39m[1m[2m2.45 kB[22m[1m[22m[2m │ gzip: 0.55 kB[22m
+[36mbuilt in 109ms.[39m
+[32m✓[39m 6 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mmain.js  [39m[1m[2m37.75 kB[22m[1m[22m[2m │ gzip: 12.35 kB[22m
+[36mbuilt in 162ms.[39m
+
+Connecting to DB.
+fetching new

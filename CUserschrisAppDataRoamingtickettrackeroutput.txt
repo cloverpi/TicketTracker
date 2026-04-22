@@ -1,0 +1,120 @@
+
+> tickettracker@0.0.32 dev
+> vite
+
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36m
+build started...[39m
+[36m
+build started...[39m
+
+  [32m[1mVITE[22m v6.4.1[39m  [2mready in [0m[1m468[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+transforming...
+transforming...
+[32m✓[39m 1 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mpreload.mjs  [39m[1m[2m2.45 kB[22m[1m[22m[2m │ gzip: 0.55 kB[22m
+[36mbuilt in 104ms.[39m
+[32m✓[39m 6 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mmain.js  [39m[1m[2m37.75 kB[22m[1m[22m[2m │ gzip: 12.35 kB[22m
+[36mbuilt in 162ms.[39m
+
+Connecting to DB.
+fetching new
+
+> tickettracker@0.0.32 dev
+> vite
+
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36m
+build started...[39m
+[36m
+build started...[39m
+
+  [32m[1mVITE[22m v6.4.1[39m  [2mready in [0m[1m474[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+transforming...
+[32m✓[39m 1 modules transformed.
+transforming...
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mpreload.mjs  [39m[1m[2m2.45 kB[22m[1m[22m[2m │ gzip: 0.55 kB[22m
+[36mbuilt in 94ms.[39m
+[32m✓[39m 6 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mmain.js  [39m[1m[2m37.75 kB[22m[1m[22m[2m │ gzip: 12.35 kB[22m
+[36mbuilt in 159ms.[39m
+
+Connecting to DB.
+fetching new
+Debugger listening on ws://127.0.0.1:49281/5105334d-f537-4273-83f4-6a36e8953c64
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+
+> tickettracker@0.0.32 dev
+> vite
+
+Debugger listening on ws://127.0.0.1:49283/3a10c081-abb1-4f27-89ca-4c78516226c1
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36mvite v6.4.1 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36m
+build started...[39m
+[36m
+build started...[39m
+
+  [32m[1mVITE[22m v6.4.1[39m  [2mready in [0m[1m456[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+transforming...
+[32m✓[39m 1 modules transformed.
+transforming...
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mpreload.mjs  [39m[1m[2m2.45 kB[22m[1m[22m[2m │ gzip: 0.55 kB[22m
+[36mbuilt in 91ms.[39m
+[32m✓[39m 6 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist-electron/[22m[36mmain.js  [39m[1m[2m37.75 kB[22m[1m[22m[2m │ gzip: 12.35 kB[22m
+[36mbuilt in 152ms.[39m
+
+Debugger listening on ws://127.0.0.1:49287/13678dfc-8c30-45fa-ac1f-33bfd88846a8
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+(node:11000) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `electron --trace-deprecation ...` to show where the warning was created)
+Connecting to DB.
+fetching new
+Waiting for the debugger to disconnect...
+ERROR: The process "11000" not found.
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
